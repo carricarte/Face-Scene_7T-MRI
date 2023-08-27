@@ -1,21 +1,12 @@
 #!/bin/sh
 
-<<<<<<< HEAD
 #SBATCH --job-name=_deconvolution
-=======
-#SBATCH --job-name=p_devein
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --qos=standard
-<<<<<<< HEAD
 #SBATCH --time=10:00:00
 #SBATCH --mem-per-cpu=0
-=======
-#SBATCH --time=01:00:00
-#SBATCH --mem-per-cpu=4
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 INPUTDIR=$1
 LAYERDIR="$2"
@@ -25,7 +16,6 @@ SUB=$5
 SCRIPTDIR=$6
 
 START=1
-<<<<<<< HEAD
 END=10
 # END=12
 
@@ -37,15 +27,6 @@ for RUN in $(seq $START $END); do
     for beta in 'beta_0003.nii' 'beta_0004.nii' 'beta_0005.nii' 'beta_0006.nii' 'beta_0008.nii' 'beta_0009.nii' 'beta_0010.nii' 'beta_0011.nii'; do
       beta_dir[$index]="$INPUTDIR/$sub/analysis/identity/run-$(printf "%02d" $RUN)/$beta"
       # beta_dir[$index]="$INPUTDIR/$sub/analysis/identity/$beta"
-=======
-END=12
-
-index=0
-for RUN in $(seq $START $END); do
-  for sub in 'sub-01' 'sub-02' 'sub-03' 'sub-06' 'sub-07' 'sub-08' 'sub-09' 'sub-10' 'sub-11' 'sub-12' 'sub-13' 'sub-14' 'sub-15' 'sub-16' 'sub-17' 'sub-18'; do
-    for beta in 'beta_0003.nii' 'beta_0004.nii' 'beta_0005.nii' 'beta_0006.nii' 'beta_0008.nii' 'beta_0009.nii' 'beta_0010.nii' 'beta_0011.nii'; do
-      beta_dir[$index]="$INPUTDIR/$sub/analysis/no_smoothing/beta/run-$(printf "%02d" $RUN)/$beta"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
       index=$((index + 1))
       # sbatch "$SCRIPTDIR/multi_devein" "$beta_dir" "$LAYERDIR" "$COLUMNDIR" "$ALFNIIDIR"
     done

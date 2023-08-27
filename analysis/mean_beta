@@ -15,9 +15,6 @@ SUB="$3"
 
 # python "$SCRIPTDIR/mean_beta_psc.py" "$INPUTDIR"
 python "$SCRIPTDIR/mean_beta.py" "$INPUTDIR"
-<<<<<<< HEAD
 # python "$SCRIPTDIR/mean_contrast.py" "$INPUTDIR"
-=======
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 # python "$SCRIPTDIR/mean_beta_vaso2.py" "$INPUTDIR"  #MEM 1GB
 # python "$SCRIPTDIR/mean_beta_full_session.py" "$INPUTDIR" "$SUB" #MEM 1GB

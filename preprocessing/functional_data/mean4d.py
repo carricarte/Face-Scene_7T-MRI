@@ -6,8 +6,7 @@ from sklearn import preprocessing
 import sys
 
 # MEMORY ALLOCATION 3500
-input_dir = "/Users/carricarte/scratch/projects/imagery/main/vaso/derivatives/sub-08/func"
-# input_dir = sys.argv[1]
+input_dir = sys.argv[1]
 
 seq = 'vaso'
 

@@ -92,7 +92,7 @@ if [ "$TYPE" == "Affine" ]; then
     -x "$MASK"
 fi
 
-if [ "$TYPE" == "ChangedParameter" ]; then
+if [ "$TYPE" == "AP" ]; then
   antsRegistration \
     --verbose 1 \
     --dimensionality 3 \

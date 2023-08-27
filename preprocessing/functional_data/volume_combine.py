@@ -20,8 +20,4 @@ nii_1[nii_1 == 0] = nii_2[nii_1 == 0]
 pathfile, namefile = split(nifti1_dir)
 
 new_vol = nib.Nifti1Image(nii_1, reference_vol.affine, reference_vol.header)
-<<<<<<< HEAD
 nib.save(new_vol, join(pathfile, namefile[3::]))
-=======
-nib.save(new_vol, join(pathfile, "manual_" + namefile[3::]))
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302

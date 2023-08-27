@@ -3,8 +3,7 @@ from os.path import join
 from nilearn.image import mean_img
 import sys
 
-input_dir = "/Users/carricarte/scratch/projects/imagery/main/vaso/derivatives/sub-07/func"
-# input_dir = sys.argv[1]
+input_dir = sys.argv[1]
 
 epi_list = []
 # [epi_list.append(join(input_dir, _)) for _ in listdir(input_dir) if _.endswith(".nii") and "._" not in _

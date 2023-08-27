@@ -13,14 +13,9 @@ input_dir = sys.argv[1]
 output_dir = sys.argv[2]
 glm_dir = sys.argv[3]
 subject_id = sys.argv[4]
-<<<<<<< HEAD
 epi_mask = sys.argv[5]
 spm_dir = sys.argv[6]
 matlab_dir = sys.argv[7]
-=======
-spm_dir = sys.argv[5]
-matlab_dir = sys.argv[6]
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 spm.SPMCommand.set_mlab_paths(paths=spm_dir);
 print(spm.SPMCommand().version)
@@ -93,11 +88,7 @@ cont06 = ['seen_faces > seen_places',                          'T', condition_na
 cont07 = ['seen_places > seen_faces',                          'T', condition_names, [-1, -1, 1, 1, 0, 0, 0, 0, 0]]
 cont08 = ['imagined_faces > imagined_places',                  'T', condition_names, [0, 0, 0, 0, 1, 1, -1, -1, 0]]
 cont09 = ['imagined_places > imagined_faces',                  'T', condition_names, [0, 0, 0, 0, -1, -1, 1, 1, 0]]
-<<<<<<< HEAD
 cont10 = ['seen_faces > baseline',                          'T', condition_names, [1, 1, 0, 0, 0, 0, 0, 0, -1]]
-=======
-cont10 = ['seen_faces > seen_baseline',                          'T', condition_names, [1, 1, 0, 0, 0, 0, 0, 0, -1]]
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 cont11 = ['seen_places > baseline',                          'T', condition_names, [0, 0, 1, 1, 0, 0, 0, 0, -1]]
 cont12 = ['imagined_faces > baseline',                  'T', condition_names, [0, 0, 0, 0, 1, 1, 0, 0, -1]]
 cont13 = ['imagined_places > baseline',                  'T', condition_names, [0, 0, 0, 0, 0, 0, 1, 1, -1]]
@@ -147,13 +138,8 @@ for glm_file in glm_files:
 
 scans = Node(DataGrabber(infields=['subject_id', 'run'], outfields=['func']), name="scans")
 scans.inputs.base_directory = input_dir
-<<<<<<< HEAD
 # scans.inputs.template = 'cr_rsub-%s_task-img_run-%02d_bold.nii'
 scans.inputs.template = 'sm_cr_rsub-%s_task-img_run-%02d_bold.nii'
-=======
-scans.inputs.template = 'cr_rsub-%s_task-img_run-%02d_bold.nii'
-# scans.inputs.template = 'sm_rsub-%s_task-imagery_run-%02d_bold.nii'
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 scans.inputs.sort_filelist = True
 scans.inputs.subject_id = subject_id
 scans.inputs.run = run_list
@@ -181,11 +167,8 @@ modelspec.inputs.subject_info = subject_info
 level1design = Node(Level1Design(bases={'gamma': {'length': 32, 'order': 1}},
                                  timing_units='secs',
                                  interscan_interval=TR,
-<<<<<<< HEAD
                                  # mask_image=epi_mask,
                                  # mask_threshold='-Inf',
-=======
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
                                  model_serial_correlations='FAST'), name='level1design')
 
 # EstimateModel - estimate the parameters of the model
@@ -208,7 +191,6 @@ wf.connect([
     (level1estimate, level1conest, [("spm_mat_file", "spm_mat_file"),
                                     ("beta_images", "beta_images"),
                                     ("residual_image", "residual_image")]),
-<<<<<<< HEAD
     (level1conest, datasink, [("spm_mat_file", "analysis.imagery"),
                               ("spmT_images", "analysis.imagery.@T"),
                               ("con_images", "analysis.imagery.@con"),
@@ -217,16 +199,6 @@ wf.connect([
                               ]),
     (level1estimate, datasink, [("spm_mat_file", 'analysis.imagery.beta'),
                                 ("beta_images", 'analysis.imagery.beta.@B'),
-=======
-    (level1conest, datasink, [("spm_mat_file", "analysis.univariate.no_smooth"),
-                              ("spmT_images", "analysis.univariate.no_smooth.@T"),
-                              ("con_images", "analysis.univariate.no_smooth.@con"),
-                              ("spmF_images", "analysis.univariate.no_smooth.@F"),
-                              ("ess_images", "analysis.univariate.no_smooth.@ess"),
-                              ]),
-    (level1estimate, datasink, [("spm_mat_file", 'analysis.univariate.no_smooth.beta'),
-                                ("beta_images", 'analysis.univariate.no_smooth.beta.@B'),
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
                                 ]),
 ])
 wf.run()

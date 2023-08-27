@@ -3,11 +3,7 @@ import numpy as np
 from nilearn.masking import apply_mask
 import pandas as pd
 import image_stats
-<<<<<<< HEAD
 from nilearn.image import new_img_like
-=======
-from nilearn.image import new_img_like, load_img
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 from os.path import join, split
 from os import listdir
 from math import isnan
@@ -30,7 +26,6 @@ layer_mask_file = sys.argv[4]
 tmap_dir = sys.argv[5]
 hemisphere_mask_dir = sys.argv[6]
 
-<<<<<<< HEAD
 # input_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/analysis/test"
 # output_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/analysis/test"
 # mask_file = "/Users/carricarte/PhD/Debugging/bold/sub-18/mask/mask.nii"
@@ -38,8 +33,6 @@ hemisphere_mask_dir = sys.argv[6]
 # tmap_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/analysis/localizer"
 # hemisphere_mask_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/mask"
 
-=======
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 column_dir, lf = split(layer_mask_file)
 mask_layer_list = image_stats.get_layer(layer_mask_file)
 
@@ -49,12 +42,8 @@ mask_layer_list = image_stats.get_layer(layer_mask_file)
 df = pd.DataFrame()
 r = 1
 cols = ["accuracy"]
-<<<<<<< HEAD
 area = ["FFA", "PPA"]
 # area = ["PPA", "FFA"]
-=======
-area = ["PPA", "FFA"]
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 hemisphere = ["whole", "right", "left"]
 conditions = ['img_face', 'img_place', 'seen_face', 'seen_place']
 layers = ["deep", "middle", "superficial"]
@@ -64,7 +53,6 @@ right_mask_file = join(hemisphere_mask_dir, "right_mask.nii")
 
 avg_betas = []
 [avg_betas.append(join(input_dir, beta_vol)) for beta_vol in listdir(input_dir) if "CBV" not in beta_vol and
-<<<<<<< HEAD
  "psc" not in beta_vol and "constant" not in beta_vol and "Linear" not in beta_vol and "econv" not in beta_vol and
  beta_vol.endswith(".nii") and "lh" not in beta_vol and "rh" not in beta_vol and "._" not in beta_vol and "lambda"
  not in beta_vol]
@@ -76,15 +64,7 @@ for file in avg_betas:
 # voxel = 50  # 1000 final
 voxel = np.arange(50, 1100, 50)  # 1000 final
 # voxel = np.arange(50, 1050, 50)  # 1000 final
-=======
- "psc_" in beta_vol and "constant" not in beta_vol and "Linear" not in beta_vol and "Deconv" in beta_vol and
- beta_vol.endswith(".nii") and "lh" not in beta_vol and "rh" not in beta_vol and "._" not in beta_vol and "lambda"
- not in beta_vol and "manual" in beta_vol]
-avg_betas.sort()
 
-# voxel = 50  # 1000 final
-voxel = np.arange(1500, 1550, 50)  # 1000 final
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 for v in voxel:
     for a in area:
@@ -153,9 +133,5 @@ for v in voxel:
             pf["layer"] = ["deep", "middle", "superficial"]
             # pf["layer"] = ["l1", "l2" "l3" "l4" "l5", "l6"]
             # vx.to_csv(join(output_dir, 'voxels_{}_{}.tsv').format(h, a), sep='\t', index=True)
-<<<<<<< HEAD
             pf.to_csv(join(output_dir, '@lamprofile_{}_{}_{}_no-devein.tsv').format(h, a, v), sep='\t',
-=======
-            pf.to_csv(join(output_dir, 'profile_{}_{}_{}_devein_deconv_controlled_manual1_l25.tsv').format(h, a, v), sep='\t',
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
                       index=True)

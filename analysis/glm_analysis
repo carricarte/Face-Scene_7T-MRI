@@ -21,16 +21,10 @@ MASK="$8"
 
 # python "$SCRIPTDIR/glm_analysis_task_img_vaso.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
 # python "$SCRIPTDIR/glm_analysis_task_img_vaso_full_session.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
-<<<<<<< HEAD
 # python "$SCRIPTDIR/glm_analysis_task_img.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$MASK" "$SPMDIR" "$MATLABDIR"
 # python "$SCRIPTDIR/glm_analysis_task_loc.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
 python "$SCRIPTDIR/glm_analysis.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
 # python "$SCRIPTDIR/glm_analysis_task_img_ori.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
-=======
-# python "$SCRIPTDIR/glm_analysis_task_img.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
-# python "$SCRIPTDIR/glm_analysis_task_loc.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
-python "$SCRIPTDIR/glm_analysis.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 # glm_analysis_task_img MEM: 2GB Time: 11-19 hours
 # glm_analysis_task_img_vaso MEM: 1GB Time: 15 min

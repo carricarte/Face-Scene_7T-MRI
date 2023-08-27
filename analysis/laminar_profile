@@ -19,13 +19,8 @@ TMAP="$5"
 HEMISPHEREMASK="$6"
 SCRIPTDIR="$7"
 
-<<<<<<< HEAD
 python "$SCRIPTDIR/laminar_profile_control.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
 # python "$SCRIPTDIR/laminar_profile.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
-=======
-# python "$SCRIPTDIR/laminar_profile_control.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
-python "$SCRIPTDIR/laminar_profile.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 # python "$SCRIPTDIR/laminar_pattern.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" # > output_sub14.txt
 # python "$SCRIPTDIR/laminar_pattern_cross.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" # > output_sub14.txt
 # python "$SCRIPTDIR/beta_plot.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$TMAP" "$HEMISPHEREMASK"

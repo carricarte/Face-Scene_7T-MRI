@@ -1,6 +1,5 @@
 #!/bin/sh
 
-<<<<<<< HEAD
 #SBATCH --job-name=main
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
@@ -8,16 +7,6 @@
 #SBATCH --qos=standard
 #SBATCH --time=08:00:00
 #SBATCH --mem-per-cpu=10
-=======
-#SBATCH --job-name=layer_mri
-#SBATCH --ntasks=1
-#SBATCH --array=1,2,3,4,5,6,7 # subject number; set array length to 1 for steps 1 & 5
-#SBATCH --qos=standard
-#SBATCH --time=24:00:00
-#SBATCH --mem-per-cpu=2000
-#SBATCH --mail-type=end
-#iSBATCH --mail-user=carricarte@zedat.fu-berlin.de
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 # Main script which controls all mri preprocessing
 #and analysis steps and checks the paths accordingly
@@ -40,12 +29,10 @@ MATLABDIR="/trinity/shared/easybuild/software/MATLAB/2018b/bin/matlab"
 # , "script_dir"] where each expression after evaluation corresponds
 # to an existing file or path
 
-<<<<<<< HEAD
 # for SUBJECT in "01"; do
 # for SUBJECT in "01" "02" "03" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15" "16" "17" "18"; do
 
-=======
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
 ALLDIR=$(python "$PIPELINEDIR/check_path.py" "$PIPELINEDIR" "$STEP" "$SUBJECT")
 FALSEDIR=$? # variable with output 0 = all directories exist;
 #1 = at least one directory doesn't exist
@@ -63,15 +50,10 @@ echo "SCRIPTDIR: $SCRIPTDIR"
 
 if [ "$FALSEDIR" == "0" ]; then
 
-<<<<<<< HEAD
+
   ############################################
   #FILE ORGANIZATION
   ############################################
-=======
-############################################
-#FILE ORGANIZATION
-############################################
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
   #dicom to nifti using dcm2niix function
   if [ "$STEP" == "1" ]; then
@@ -236,10 +218,9 @@ if [ "$FALSEDIR" == "0" ]; then
     # AFFINE="$(echo "$ALLDIR" | cut -d';' -f5)"
     # C1="$(echo "$ALLDIR" | cut -d';' -f6)"
     # C2="$(echo "$ALLDIR" | cut -d';' -f7)"
+
     python "$SCRIPTDIR/brainmask_epi.py" "$INPUTDIR" "$WORKINGDIR"
     # sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR" # last used
-    # python "$SCRIPTDIR/brainmask_epi.py" "$C1" "$C2" "$OUTPUTDIR" "$INPUTDIR" "$SCRIPTDIR" "$AFFINE"
-    sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR"
     # python "$SCRIPTDIR/brainmask.py" "$INPUTDIR" "$WORKINGDIR"
     # python "$SCRIPTDIR/mean4d_pilot.py" "$INPUTDIR" "$WORKINGDIR"
     # python "$SCRIPTDIR/mean_epimask.py" "$INPUTDIR"
@@ -256,11 +237,10 @@ if [ "$FALSEDIR" == "0" ]; then
   if [ "$STEP" == "23" ]; then
     COLUMNSDIR="$(echo "$ALLDIR" | cut -d';' -f5)"
     ALFNIIDIR="$(echo "$ALLDIR" | cut -d';' -f6)"
+
     sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
     # sbatch --array=0-815 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
     # sbatch --array=0-63 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
-    # sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
-    sbatch --array=0-1535 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
     # sbatch "$SCRIPTDIR"/devein_laynii "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR"
   fi
 
@@ -271,7 +251,7 @@ if [ "$FALSEDIR" == "0" ]; then
     MOVINGIMAGE="$(echo "$ALLDIR" | cut -d';' -f6)"
     MASK="$(echo "$ALLDIR" | cut -d';' -f7)"
     MATRIX="$(echo "$ALLDIR" | cut -d';' -f8)"
-    TYPE="ChangedParameter"
+    TYPE="AP"
     sbatch --array=0-3 "$SCRIPTDIR"/run_multi_registration "$INPUTDIR" "$SCRIPTDIR"
     # sbatch "$SCRIPTDIR"/ants_registration "$FIXEDIMAGE" "$MOVINGIMAGE" "$MASK" "$MATRIX" "$OUTPUTDIR" "$TYPE"
 
@@ -298,7 +278,6 @@ if [ "$FALSEDIR" == "0" ]; then
   if [ "$STEP" == "26" ]; then
 
     sbatch --array=0-11 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
-    sbatch --array=0-0 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
 
   fi
 
@@ -527,7 +506,7 @@ if [ "$FALSEDIR" == "0" ]; then
 
   fi
 
-<<<<<<< HEAD
+
   # multivariate noise normalization
   if [ "$STEP" == "52" ]; then
 
@@ -542,11 +521,6 @@ if [ "$FALSEDIR" == "0" ]; then
     TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
     LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f7)"
     sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR" "$SUBJECT" "$MASKFILE" "$TMAP" "$LAYER_FILE"
-    # multivariate beta decoding
-  if [ "$STEP" == "52" ]; then
-    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
-    TMAP_FILE="$(echo "$ALLDIR" | cut -d';' -f6)"
-    sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$LAYER_FILE" "$TMAP_FILE"
 
   fi
 

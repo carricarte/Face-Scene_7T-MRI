@@ -116,10 +116,7 @@ for r in run_list:
     scans = Node(DataGrabber(infields=['subject_id', 'run'], outfields=['func']), name="scans")
     scans.inputs.base_directory = input_dir
     scans.inputs.template = 'cr_rsub-%s_task-img_run-%02d_bold.nii'
-<<<<<<< HEAD
     # scans.inputs.template = 'sm_cr_rsub-%s_task-img_run-%02d_bold.nii'
-=======
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
     scans.inputs.sort_filelist = True
     scans.inputs.subject_id = subject_id
     scans.inputs.run = r
@@ -152,20 +149,12 @@ for r in run_list:
                                      ), name='level1design')
     # mask_image=epi_mask,
     # EstimateModel - estimate the parameters of the model
-<<<<<<< HEAD
     level1estimate = Node(EstimateModel(estimation_method={'Classical': 1}, write_residuals=True),
                           name='level1estimate')
 
     # EstimateContrast - estimates contrasts
     # level1conest = Node(EstimateContrast(), name="level1conest")
     # level1conest.inputs.contrasts = contrast_list
-=======
-    level1estimate = Node(EstimateModel(estimation_method={'Classical': 1}), name='level1estimate')
-
-    # EstimateContrast - estimates contrasts
-    level1conest = Node(EstimateContrast(), name="level1conest")
-    level1conest.inputs.contrasts = contrast_list
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
 
     datasink = Node(DataSink(base_directory=output_dir), name='datasink')
@@ -178,7 +167,6 @@ for r in run_list:
         (modelspec, level1design, [("session_info", "session_info")]),
         (level1design, level1estimate, [("spm_mat_file", "spm_mat_file")]),
 
-<<<<<<< HEAD
     # (level1estimate, level1conest, [("spm_mat_file", "spm_mat_file"),
     #                                 ("beta_images", "beta_images"),
     #                                 ("residual_image", "residual_image")]),
@@ -192,21 +180,6 @@ for r in run_list:
     #                           ("spmF_images", 'analysis.imagery.run-{}.@F'.format('%02d' % r)),
     #                           ("ess_images", 'analysis.imagery.run-{}.@ess'.format('%02d' % r)),
     #                           ]),
-=======
-    (level1estimate, level1conest, [("spm_mat_file", "spm_mat_file"),
-                                    ("beta_images", "beta_images"),
-                                    ("residual_image", "residual_image")]),
-    (level1conest, datasink, [("spm_mat_file", "analysis.univariate.imagery"),
-                              ("spmT_images", 'analysis.no_smoothing.beta.run-{}.@T'.format('%02d' % r)),
-                              ("con_images", 'analysis.no_smoothing.beta.run-{}.@con'.format('%02d' % r)),
-                              ("spmF_images", 'analysis.no_smoothing.beta.run-{}.@F'.format('%02d' % r)),
-                              ("ess_images", 'analysis.no_smoothing.beta.run-{}.@ess'.format('%02d' % r)),
-                              ]),
-
-        (level1estimate, datasink, [("spm_mat_file", 'analysis.no_smoothing.beta.run-{}'.format('%02d' % r)),
-                                    ("beta_images", 'analysis.no_smoothing.beta.run-{}.@B'.format('%02d' % r)),
-                                    ]),
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
     ])
     # wf.connect([
     #     (scans, modelspec, [("func", "functional_runs")]),

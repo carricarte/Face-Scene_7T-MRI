@@ -16,7 +16,6 @@ INPUTDIR="$1"
 SCRIPTDIR="$3"
 
 START=1
-<<<<<<< HEAD
 END=12
 
 index=0
@@ -24,15 +23,6 @@ for RUN in $(seq $START $END); do
   for sub in 'sub-07'; do
   # for sub in 'sub-01' 'sub-02' 'sub-03' 'sub-04' 'sub-05' 'sub-06' 'sub-07'; do
       nifti_dir[$index]="$INPUTDIR/$sub/func/cr_r"$sub"_task-img_run-$(printf "%02d" "$RUN")_bold.nii"
-=======
-END=1
-
-index=0
-for RUN in $(seq $START $END); do
-  for sub in 'sub-04'; do
-  # for sub in 'sub-01' 'sub-02' 'sub-03' 'sub-04' 'sub-05' 'sub-06' 'sub-07'; do
-      nifti_dir[$index]="$INPUTDIR/$sub/func/cr_r"$sub"_task-loc_run-$(printf "%02d" "$RUN")_bold.nii"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
       # nifti_dir[$index]="$INPUTDIR/$sub/func/corr_r"$sub"_task-img_run-$(printf "%02d" "$RUN")_vaso.nii"
       index=$((index + 1))
   done

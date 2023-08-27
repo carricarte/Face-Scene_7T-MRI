@@ -1,10 +1,6 @@
 #!/bin/sh
 
-<<<<<<< HEAD
 #SBATCH --job-name=deconvolution
-=======
-#SBATCH --job-name=m_devein
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
