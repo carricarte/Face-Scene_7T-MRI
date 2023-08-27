@@ -1,105 +1,137 @@
 import sys
 import numpy as np
-import pandas as pd
-import nibabel as nb
 from os import listdir
 from os.path import join
-from sklearn.svm import SVC
+from nilearn.masking import apply_mask
+from sklearn.svm import LinearSVC
+import random as rd
 from sklearn.model_selection import GridSearchCV
+import image_stats
+from nilearn.image import new_img_like, load_img
+import pandas as pd
 
-# directories
+
+def get_divisors(X):
+    return np.unique([d for d in np.arange(2, int(X/2) + 1) if X % d == 0])
+
+
 input_dir = sys.argv[1]
 output_dir = sys.argv[2]
-mask_file = sys.argv[3]
-tmap_file = sys.argv[4]
-tsv_dir = sys.argv[5]
+subject = sys.argv[3]
 
-# get epi and data
-modality = ['perception', 'imagery']  # imagery or perception
-category = ['face', 'place']
-voxels = np.arange(100, 8000, 100) - 1
-df = pd.DataFrame()
-svc = SVC()
+if "01" == subject:
+    no_runs = 9
+elif "02" == subject:
+    no_runs = 10
+elif "03" == subject:
+    no_runs = 10
+elif "04" == subject:
+    no_runs = 12
+elif "05" == subject:
+    no_runs = 12
+elif "06" == subject:
+    no_runs = 10
+elif "07" == subject:
+    no_runs = 12
+elif "08" == subject:
+    no_runs = 10
+elif "09" == subject:
+    no_runs = 10
+elif "10" == subject:
+    no_runs = 10
+elif "11" == subject:
+    no_runs = 10
+elif "12" == subject:
+    no_runs = 10
+elif "13" == subject:
+    no_runs = 10
+elif "14" == subject:
+    no_runs = 10
+elif "15" == subject:
+    no_runs = 10
+elif "16" == subject:
+    no_runs = 10
+elif "17" == subject:
+    no_runs = 12
+elif "18" == subject:
+    no_runs = 10
+
+# con = ["PPA_per", "PPA_img", "FFA_per", "FFA_img"]
+con = ["per", "img"]
 c = [1]
 param_grid = dict(C=c)
-grid = GridSearchCV(svc, param_grid, cv=2, scoring='accuracy')
-df = pd.DataFrame(columns=['v' + str(i) for i in voxels + 1] + ['Modality'])
+nperm = 1000
+# d = np.arange(2, 7)
+# cv_arr = [2]
+# cv_arr = np.arange(3, 10)
+layers = ["1", "2", "3"]
+voxel = np.arange(50, 550, 50)
+svc = LinearSVC(penalty='l2', loss='hinge', C=1, multi_class='ovr', fit_intercept=True, max_iter=10000)
 
-run_list = []
-[run_list.append(join(input_dir, f)) for f in listdir(input_dir) if "run-" in f and '._' not in f
- and "00" not in f and "sm_" not in f]
-run_list.sort()
+no_runs = no_runs*2
 
-# load mask and get threshold values according to the number of voxels
-mask = nb.load(mask_file)
-mask = mask.get_fdata()
-tmap = nb.load(tmap_file)
-tmap = tmap.get_fdata()
-print(sum(sum(sum(mask != 0))))
-tval = tmap[mask != 0]
+for d in get_divisors(no_runs):
 
-tval.sort()
-tval = tval[::-1]
-threshold = tval[voxels]
+    for c in con:
 
-for m in modality:
+        df_acc = pd.DataFrame()
 
-    if m == 'imagery':
+        for v in voxel:
 
-        # a, b = ['0003', '0004']
-        a, b = ['0004', '0005']
-        c, d = ['0003', '0006']
+            acc = []
 
-    elif m == 'perception':
+            for l in layers:
 
-        # a, b = ['0006', '0007']
-        a, b = ['0009', '0010']
-        c, d = ['0008', '0011']
+                beta_files = []
+                [beta_files.append(join(input_dir, f)) for f in listdir(input_dir) if
+                 "vox-{0}_".format(v) in f and '._' not in f
+                 and c in f and f.endswith(".tsv") and "layer-{0}".format(l) in f]
+                beta_files.sort()
 
-    acc = []
+                betas = pd.read_table(beta_files[0], sep='\t', index_col=0)
+                for i, beta in enumerate(beta_files[1::]):
+                    df = pd.read_table(beta, sep='\t', index_col=0)
+                    frames = [betas, df]
+                    betas = pd.concat(frames, ignore_index=True)
 
-    # concatenate all functional volumes across runs in a 4D matrix
-    beta = nb.load(join(input_dir, run_list[0], 'beta_0001.nii'))
-    beta = beta.get_fdata()
-    features = beta.reshape(-1)
-    # features = features[new_mask]
-    # features = features[np.logical_not(np.isnan(features))]
-    feature_matrix = np.zeros(shape=(len(features), 4 * len(run_list)), dtype='float')
-    beta_list = []
-    for run in run_list:
-        [beta_list.append(join(run, x)) for x in listdir(run) if "._" not in x and a in x or b in x
-         or c in x or d in x]
-    beta_list.sort()
-    y = np.tile([1, 2, 2, 1], int(len(run_list)))
-    index = 0
-    for beta_file in beta_list:
-        print(beta_file)
-        beta = nb.load(beta_file)
-        beta = beta.get_fdata()
-        features = beta.reshape(-1)
-        feature_matrix[:, index: index + 1] = np.reshape(features, [features.shape[0], 1])
-        index = index + 1
-        # print(feature_matrix[100, index:index + 1])
+                # get betas per condition
+                y = np.tile([0, 1], int(betas.shape[0] / 2))
+                order = np.arange(0, int(len(y) / 2))
+                # cv = int(len(y) / 2)
+                # grid = GridSearchCV(svc, param_grid, cv=cv, scoring='accuracy')
+                # grid.fit(betas.to_numpy(), y)
+                # acc.append(grid.best_score_)
 
-    print(feature_matrix.shape)
-    for t in threshold:
-        ffa_ppa = tmap >= t
-        new_mask = np.logical_and(ffa_ppa, mask)
-        new_mask = new_mask.reshape(-1)
-        X = feature_matrix[new_mask]
+                _acc = []
+                for n in range(0, nperm):
 
-        # remove rows with nan
-        rows_with_nan, columns_with_nan = np.where(X != X)
-        rows_with_nan = list(set(rows_with_nan))
-        if rows_with_nan:
-            X = np.delete(X, rows_with_nan, 0)
+                    pseudo_X = []
+                    rd.shuffle(order)
+                    sub_indexes = np.array_split(order, d)
 
-        X = X.T
-        # y = np.tile([1, 2], int(X.shape[0] / 2))
-        print(y)
-        grid.fit(X, y)
-        effect = grid.best_score_
-        acc.append(effect)
+                    for class_ in np.unique(y):
 
-    df.loc[len(df.index)] = acc + [m]
-    df.to_csv(join(output_dir, 'glm_svc_accuracy_devein_linear.tsv'), sep='\t', index=True)
+                        class_index = y == class_
+                        sub_X = betas.to_numpy()[class_index, :]
+
+                        for i, sub_index in enumerate(sub_indexes):
+                            pseudo_X.append(np.mean(sub_X[sub_index], 0))
+
+                    pseudo_X = np.array(pseudo_X)
+                    pseudo_y = np.repeat([0, 1], int(len(pseudo_X) / 2))
+                    cv = int(len(pseudo_y) / 2)
+                    grid = GridSearchCV(svc, param_grid, cv=cv, scoring='accuracy')
+                    grid.fit(pseudo_X, pseudo_y)
+                    _acc.append(grid.best_score_)
+                acc.append(np.mean(_acc))
+
+            df_acc[v] = acc
+        df_acc["layer"] = ["deep", "middle", "superficial"]
+        cv = "max"
+        df_acc.to_csv(
+            join(output_dir, '{0}_decoding_cat_devein_mnn_pseudotrial-{1}_cv-{2}.tsv'.format(c, d, cv)),
+            sep='\t', index=True)
+        # df_acc.to_csv(join(output_dir, '{0}_decoding_id_devein_mnn_pseudo-{1}_cv-{2}.tsv'.format(c, num_subsamples, cv)), sep='\t', index=True)
+
+# df["layer"] = ["deep", "middle", "superficial"]
+# df.to_csv(join(input_dir, '{0}_decoding_id_devein_no-mnn_pseudo-{1}_cv-{2}.tsv'.format(c, num_subsamples, cv)), sep='\t', index=True)
