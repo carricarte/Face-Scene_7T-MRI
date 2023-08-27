@@ -18,7 +18,7 @@ index=0
   # for sub in 'sub-01' 'sub-02' 'sub-03' 'sub-04' 'sub-05' 'sub-06' 'sub-07'; do
   for sub in "sub-04"; do
     # for type in 'NoRigid' 'SyN' 'Affine' 'AP'; do
-    for type in 'AP' "NoRigid" "SyN" "Affine"; do
+    for type in 'ChangedParameter' "NoRigid" "SyN" "Affine"; do
       combinations[$index]="$sub $type"
       index=$((index + 1))
   done
@@ -38,7 +38,7 @@ fi
 if [ "$TYPE" == "Affine" ]; then
   SUBDIR="reg3"
 fi
-if [ "$TYPE" == "AP" ]; then
+if [ "$TYPE" == "ChangedParameter" ]; then
   SUBDIR="reg4"
 fi
 if [ "$TYPE" == "CON" ]; then

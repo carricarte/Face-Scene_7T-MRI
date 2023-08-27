@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#SBATCH --job-name=recon2-wm
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=8
+#SBATCH --mem-per-cpu=24gb
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+OUTPUTDIR="$1"
+WORKINGDIR="$2"
+
+recon-all -autorecon2-wm -autorecon3 -s "freesurfer" -sd "$OUTPUTDIR" -hires -xopts-overwrite' ' -expert "$WORKINGDIR" -parallel

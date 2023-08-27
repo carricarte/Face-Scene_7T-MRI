@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#SBATCH --job-name=autorecon1
+#SBATCH --ntasks=1
+#SBATCH --qos=standard
+#SBATCH --time=05:00:00
+#SBATCH --mem-per-cpu=16384
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR=`ls "$1"/*fwhm*`
+OUTPUTDIR="$2"
+
+recon-all -autorecon1 -s "freesurfer" -i "$INPUTDIR" -sd "$OUTPUTDIR" -hires

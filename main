@@ -236,13 +236,10 @@ if [ "$FALSEDIR" == "0" ]; then
     # AFFINE="$(echo "$ALLDIR" | cut -d';' -f5)"
     # C1="$(echo "$ALLDIR" | cut -d';' -f6)"
     # C2="$(echo "$ALLDIR" | cut -d';' -f7)"
-<<<<<<< HEAD
     python "$SCRIPTDIR/brainmask_epi.py" "$INPUTDIR" "$WORKINGDIR"
     # sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR" # last used
-=======
     # python "$SCRIPTDIR/brainmask_epi.py" "$C1" "$C2" "$OUTPUTDIR" "$INPUTDIR" "$SCRIPTDIR" "$AFFINE"
     sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
     # python "$SCRIPTDIR/brainmask.py" "$INPUTDIR" "$WORKINGDIR"
     # python "$SCRIPTDIR/mean4d_pilot.py" "$INPUTDIR" "$WORKINGDIR"
     # python "$SCRIPTDIR/mean_epimask.py" "$INPUTDIR"
@@ -259,14 +256,11 @@ if [ "$FALSEDIR" == "0" ]; then
   if [ "$STEP" == "23" ]; then
     COLUMNSDIR="$(echo "$ALLDIR" | cut -d';' -f5)"
     ALFNIIDIR="$(echo "$ALLDIR" | cut -d';' -f6)"
-<<<<<<< HEAD
     sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
     # sbatch --array=0-815 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
     # sbatch --array=0-63 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
-=======
     # sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
     sbatch --array=0-1535 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
     # sbatch "$SCRIPTDIR"/devein_laynii "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR"
   fi
 
@@ -277,7 +271,7 @@ if [ "$FALSEDIR" == "0" ]; then
     MOVINGIMAGE="$(echo "$ALLDIR" | cut -d';' -f6)"
     MASK="$(echo "$ALLDIR" | cut -d';' -f7)"
     MATRIX="$(echo "$ALLDIR" | cut -d';' -f8)"
-    TYPE="AP"
+    TYPE="ChangedParameter"
     sbatch --array=0-3 "$SCRIPTDIR"/run_multi_registration "$INPUTDIR" "$SCRIPTDIR"
     # sbatch "$SCRIPTDIR"/ants_registration "$FIXEDIMAGE" "$MOVINGIMAGE" "$MASK" "$MATRIX" "$OUTPUTDIR" "$TYPE"
 
@@ -303,11 +297,8 @@ if [ "$FALSEDIR" == "0" ]; then
   # isotropic smoothing nilearn
   if [ "$STEP" == "26" ]; then
 
-<<<<<<< HEAD
     sbatch --array=0-11 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
-=======
     sbatch --array=0-0 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
   fi
 
@@ -551,13 +542,11 @@ if [ "$FALSEDIR" == "0" ]; then
     TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
     LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f7)"
     sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR" "$SUBJECT" "$MASKFILE" "$TMAP" "$LAYER_FILE"
-=======
     # multivariate beta decoding
   if [ "$STEP" == "52" ]; then
     LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
     TMAP_FILE="$(echo "$ALLDIR" | cut -d';' -f6)"
     sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$LAYER_FILE" "$TMAP_FILE"
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
 
   fi
 
