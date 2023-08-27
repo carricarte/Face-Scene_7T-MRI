@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#SBATCH --job-name=float16
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=1:00:00
+#SBATCH --mem-per-cpu=96gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+SCRIPTDIR="$2"
+
+python "$SCRIPTDIR/volume_float16.py" "$INPUTDIR"

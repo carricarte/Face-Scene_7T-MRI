@@ -1,0 +1,564 @@
+#!/bin/sh
+
+<<<<<<< HEAD
+#SBATCH --job-name=main
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --array=1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18
+#SBATCH --qos=standard
+#SBATCH --time=08:00:00
+#SBATCH --mem-per-cpu=10
+=======
+#SBATCH --job-name=layer_mri
+#SBATCH --ntasks=1
+#SBATCH --array=1,2,3,4,5,6,7 # subject number; set array length to 1 for steps 1 & 5
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=2000
+#SBATCH --mail-type=end
+#iSBATCH --mail-user=carricarte@zedat.fu-berlin.de
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+# Main script which controls all mri preprocessing
+#and analysis steps and checks the paths accordingly
+
+STEP="$1"
+SUBJECT=$(printf "%02d" $SLURM_ARRAY_TASK_ID)
+
+############################################
+#CHECK (FILE)PATHS FOR EACH PREP. STEP
+############################################
+
+# General paths
+PIPELINEDIR="/home/carricarte/layer_mri/pipeline"
+SPMDIR="/home/carricarte/toolbox/spm12"
+MATLABDIR="/trinity/shared/easybuild/software/MATLAB/2018b/bin/matlab"
+
+# check directories using a json file containing a dictionary with
+# key = (string) preprocessing step and value = (list) list of
+# expressions of the form ["input_dir", "output_dir", "working_dir"
+# , "script_dir"] where each expression after evaluation corresponds
+# to an existing file or path
+
+<<<<<<< HEAD
+# for SUBJECT in "01"; do
+# for SUBJECT in "01" "02" "03" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15" "16" "17" "18"; do
+
+=======
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+ALLDIR=$(python "$PIPELINEDIR/check_path.py" "$PIPELINEDIR" "$STEP" "$SUBJECT")
+FALSEDIR=$? # variable with output 0 = all directories exist;
+#1 = at least one directory doesn't exist
+
+INPUTDIR="$(echo "$ALLDIR" | cut -d';' -f1)"
+OUTPUTDIR="$(echo "$ALLDIR" | cut -d';' -f2)"
+WORKINGDIR="$(echo "$ALLDIR" | cut -d';' -f3)"
+SCRIPTDIR="$(echo "$ALLDIR" | cut -d';' -f4)"
+
+echo "$FALSEDIR"
+echo "INPUTDIR: $INPUTDIR"
+echo "OUTPUTDIR: $OUTPUTDIR"
+echo "WORKINGDIR: $WORKINGDIR"
+echo "SCRIPTDIR: $SCRIPTDIR"
+
+if [ "$FALSEDIR" == "0" ]; then
+
+<<<<<<< HEAD
+  ############################################
+  #FILE ORGANIZATION
+  ############################################
+=======
+############################################
+#FILE ORGANIZATION
+############################################
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+  #dicom to nifti using dcm2niix function
+  if [ "$STEP" == "1" ]; then
+
+    sbatch "$SCRIPTDIR"/bids_dcm2niix "$INPUTDIR" "$SUBJECT"
+    # sbatch "$SCRIPTDIR"/dicom2nii_vaso "$INPUTDIR" "$SUBJECT"
+  fi
+
+  #organize data following bids format
+  if [ "$STEP" == "2" ]; then
+
+    python "$SCRIPTDIR/folder2bids.py" "$INPUTDIR" "$OUTPUTDIR" "$SUBJECT"
+    # python "$SCRIPTDIR/folder2bids_vaso.py" "$INPUTDIR" "$OUTPUTDIR" "$SUBJECT"
+  fi
+
+  ############################################
+  #ANATOMICAL PREPROCESSING
+  ############################################
+
+  #mp2rage background denoise
+  if [ "$STEP" == "3" ]; then
+
+    sbatch "$SCRIPTDIR"/run_mp2rage_denoise "$INPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SCRIPTDIR"
+  fi
+
+  #mp2rage intensity normalization
+  if [ "$STEP" == "4" ]; then
+
+    sbatch "$SCRIPTDIR"/run_bias_field_correction "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SPMDIR" "$SCRIPTDIR"
+
+  fi
+
+  #quality control (only if bids format data)
+  if [ "$STEP" == "5" ]; then
+
+    # sbatch "$SCRIPTDIR"/mri_qc "$INPUTDIR" "$OUTPUTDIR" "$SUBJECT"
+    sbatch "$SCRIPTDIR"/anatomy "$INPUTDIR" "$OUTPUTDIR" "$SPMDIR" "$SCRIPTDIR"
+    # python "$SCRIPTDIR"/matlab_run_exp.py
+  fi
+
+  #freesurfer part 1
+  if [ "$STEP" == "6" ]; then
+
+    # sbatch "$SCRIPTDIR"/autorecon1 "$INPUTDIR" "$OUTPUTDIR"
+    INPUTDIR2="$(echo "$ALLDIR" | cut -d';' -f5)"
+    INPUTDIR3="$(echo "$ALLDIR" | cut -d';' -f6)"
+    INPUTDIR4="$(echo "$ALLDIR" | cut -d';' -f7)"
+    INPUTDIR5="$(echo "$ALLDIR" | cut -d';' -f8)"
+    FUNC="$(echo "$ALLDIR" | cut -d';' -f9)"
+
+    sbatch "$SCRIPTDIR"/upsample "$INPUTDIR" "$FUNC" "$INPUTDIR2" "$INPUTDIR3" "$INPUTDIR4" "$INPUTDIR5"
+
+  fi
+
+  #replace freesurfer brainmask by spm brainmask
+  if [ "$STEP" == "7" ]; then
+
+    python "$SCRIPTDIR/brainmask_spm.py" "$INPUTDIR" "$OUTPUTDIR" "$SPMDIR"
+
+  fi
+
+  #freesurfer part 2 & 3
+  if [ "$STEP" == "8" ]; then
+
+    python "$SCRIPTDIR/edge_detector.py" "$INPUTDIR" "$WORKINGDIR" "$OUTPUTDIR"
+    # sbatch "$SCRIPTDIR"/autorecon2_3 "$OUTPUTDIR" "$WORKINGDIR"
+
+  fi
+
+  #freesurfer part 2-wm & 3
+  #	if [ "$STEP" == "9" ]; then
+  #
+  #        sbatch "$SCRIPTDIR"/autorecon2_3_wm "$OUTPUTDIR" "$WORKINGDIR"
+  #
+  #	fi
+
+  #freesurfer part 3-pial
+  #	if [ "$STEP" == "10" ]; then
+  #
+  #        sbatch "$SCRIPTDIR"/autorecon3_pial "$OUTPUTDIR" "$WORKINGDIR"
+  #
+  #	fi
+
+  #freesurfer part 3-pial
+  #	if [ "$STEP" == "11" ]; then
+  #
+  #        sbatch "$SCRIPTDIR"/autorecon3 "$OUTPUTDIR" "$WORKINGDIR"
+  #
+  #	fi
+
+  # laminar segmentatoin using nighres
+  if [ "$STEP" == "12" ]; then
+
+    sbatch "$SCRIPTDIR"/layerification "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  # laminar and columnar segmentatoin using LAYNII
+  if [ "$STEP" == "13" ]; then
+
+    sbatch "$SCRIPTDIR"/layer_laynii "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  ############################################
+  #FUNCTIONAL PREPROCESSING
+  ############################################
+
+  # VASO: separate nulled from not nulled timeseries
+  if [ "$STEP" == "14" ]; then
+
+    sbatch "$SCRIPTDIR"/run_split_nulled_not_nulled "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  # VASO: topup correction
+  if [ "$STEP" == "15" ]; then
+
+    sbatch "$SCRIPTDIR"/topup "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  # spatial realignment using the spm interface from nipype
+  if [ "$STEP" == "16" ]; then
+
+    sbatch "$SCRIPTDIR"/run_spm_realignment "$INPUTDIR" "$OUTPUTDIR" "$SPMDIR" "$MATLABDIR" "$SCRIPTDIR"
+
+  fi
+
+  # VASO: BOLD correction
+  if [ "$STEP" == "17" ]; then
+
+    sbatch --array=0-19 "$SCRIPTDIR"/run_bold_correction "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+    # sbatch "$SCRIPTDIR"/run_vaso_bold_correction "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  # Quality control of the spatial realigment: Return a correlation matrix of the mean intensity between runs
+  if [ "$STEP" == "18" ]; then
+
+    python "$SCRIPTDIR/spatial_corr.py" "$INPUTDIR" "$OUTPUTDIR"
+
+  fi
+
+  # ANTs bias field correction mean epi (optional before coregistration)
+  if [ "$STEP" == "19" ]; then
+
+    sbatch "$SCRIPTDIR"/n4_bias_field_correction "$INPUTDIR"
+
+  fi
+
+  # ANTs bias field correction time serie (optional before coregistration)
+  if [ "$STEP" == "20" ]; then
+
+    python "$SCRIPTDIR"/n4biascorr_timeseries.py "$INPUTDIR" "$WORKINGDIR"
+
+  fi
+
+  # Skullstrip mean epi (before coregistration)
+  if [ "$STEP" == "21" ]; then
+
+    # AFFINE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    # C1="$(echo "$ALLDIR" | cut -d';' -f6)"
+    # C2="$(echo "$ALLDIR" | cut -d';' -f7)"
+<<<<<<< HEAD
+    python "$SCRIPTDIR/brainmask_epi.py" "$INPUTDIR" "$WORKINGDIR"
+    # sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR" # last used
+=======
+    # python "$SCRIPTDIR/brainmask_epi.py" "$C1" "$C2" "$OUTPUTDIR" "$INPUTDIR" "$SCRIPTDIR" "$AFFINE"
+    sbatch "$SCRIPTDIR/epi_mask" "$INPUTDIR"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+    # python "$SCRIPTDIR/brainmask.py" "$INPUTDIR" "$WORKINGDIR"
+    # python "$SCRIPTDIR/mean4d_pilot.py" "$INPUTDIR" "$WORKINGDIR"
+    # python "$SCRIPTDIR/mean_epimask.py" "$INPUTDIR"
+
+  fi
+
+  # BOLD: estimate the amplitude of the low frequencies in the time series
+  if [ "$STEP" == "22" ]; then
+
+    sbatch "$SCRIPTDIR"/ALF_melmac "$INPUTDIR"
+  fi
+
+  # devein BOLD signal using LAYNII
+  if [ "$STEP" == "23" ]; then
+    COLUMNSDIR="$(echo "$ALLDIR" | cut -d';' -f5)"
+    ALFNIIDIR="$(echo "$ALLDIR" | cut -d';' -f6)"
+<<<<<<< HEAD
+    sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
+    # sbatch --array=0-815 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
+    # sbatch --array=0-63 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
+=======
+    # sbatch --array=0-3 "$SCRIPTDIR"/devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SCRIPTDIR"
+    sbatch --array=0-1535 "$SCRIPTDIR"/run_multi_devein "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR" "$SUBJECT" "$SCRIPTDIR"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+    # sbatch "$SCRIPTDIR"/devein_laynii "$INPUTDIR" "$WORKINGDIR" "$COLUMNSDIR" "$ALFNIIDIR"
+  fi
+
+  # ANTs registration
+  if [ "$STEP" == "24" ]; then
+
+    FIXEDIMAGE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    MOVINGIMAGE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    MASK="$(echo "$ALLDIR" | cut -d';' -f7)"
+    MATRIX="$(echo "$ALLDIR" | cut -d';' -f8)"
+    TYPE="AP"
+    sbatch --array=0-3 "$SCRIPTDIR"/run_multi_registration "$INPUTDIR" "$SCRIPTDIR"
+    # sbatch "$SCRIPTDIR"/ants_registration "$FIXEDIMAGE" "$MOVINGIMAGE" "$MASK" "$MATRIX" "$OUTPUTDIR" "$TYPE"
+
+  fi
+
+  # ANTs apply transform
+  if [ "$STEP" == "25" ]; then
+
+    AFFINE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    DEFIELD="$(echo "$ALLDIR" | cut -d';' -f6)"
+
+    python "$SCRIPTDIR/ants_apply_transform.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$AFFINE" "$DEFIELD"
+
+  fi
+
+  # SPM12 normalization
+  if [ "$STEP" == "250" ]; then
+
+    sbatch "$SCRIPTDIR"/normalize "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$SPMDIR"
+
+  fi
+
+  # isotropic smoothing nilearn
+  if [ "$STEP" == "26" ]; then
+
+<<<<<<< HEAD
+    sbatch --array=0-11 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+=======
+    sbatch --array=0-0 "$SCRIPTDIR/run_smooth_img" "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+  fi
+
+  # z-scoring time series
+  if [ "$STEP" == "27" ]; then
+    HEMISPHEREMASK="$(echo "$ALLDIR" | cut -d';' -f5)"
+    sbatch --array=0-191 "$SCRIPTDIR"/run_multi_z-score "$INPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+  fi
+
+  ############################################
+  #ANALYSIS
+  ############################################
+
+  # definition glm predictors in .tsv format using pandas library
+  if [ "$STEP" == "28" ]; then
+
+    # python "$SCRIPTDIR"/data2glm_task_loc.py "$INPUTDIR" "$OUTPUTDIR"
+    # python "$SCRIPTDIR"/data2glm_task_img.py "$INPUTDIR" "$OUTPUTDIR"
+    python "$SCRIPTDIR"/data2glm_vaso2.py "$INPUTDIR" "$OUTPUTDIR"
+
+  fi
+
+  # first level analysis using spm interface from nipype
+  if [ "$STEP" == "29" ]; then
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    sbatch "$SCRIPTDIR"/glm_analysis "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$SCRIPTDIR" "$MASKFILE"
+    # sbatch "$SCRIPTDIR"/nilearn_first_level "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$MASKFILE" "$SCRIPTDIR"
+
+  fi
+
+  # VASO univariate ROI analysis
+  if [ "$STEP" == "30" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
+
+    sbatch "$SCRIPTDIR"/univariate_avg "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$MASKFILE" "$TMAP" "$SCRIPTDIR"
+
+  fi
+
+  # Convert time series to dataframe
+  if [ "$STEP" == "30" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
+    LAYER="$(echo "$ALLDIR" | cut -d';' -f7)"
+    sbatch "$SCRIPTDIR"/nifti2dframe "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$TMAP" "$SCRIPTDIR" "$LAYER"
+
+  fi
+
+  # multivariate analysis
+  if [ "$STEP" == "31" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
+    TSVDIR="$(echo "$ALLDIR" | cut -d';' -f7)"
+    sbatch "$SCRIPTDIR"/svc_analysis "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$MASKFILE" "$TMAP" "$TSVDIR" "$SCRIPTDIR"
+
+  fi
+
+  # multivariate cross-classification analysis
+  if [ "$STEP" == "32" ]; then
+
+    sbatch "$SCRIPTDIR"/svc_cross "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  # multivariate analysis
+  if [ "$STEP" == "33" ]; then
+
+    sbatch "$SCRIPTDIR"/svc_general "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  # multivariate analysis
+  if [ "$STEP" == "34" ]; then
+
+    sbatch "$SCRIPTDIR"/svc_contrast "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  # multivariate analysis based on beta estimates
+  if [ "$STEP" == "35" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
+    sbatch "$SCRIPTDIR"/svc_beta "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$TMAP" "$SCRIPTDIR"
+
+  fi
+
+  # reduce file size by using float16/32 format
+  if [ "$STEP" == "36" ]; then
+
+    sbatch "$SCRIPTDIR"/volume_float16 "$INPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  # searchlight analysis
+  if [ "$STEP" == "37" ]; then
+
+    ANATDIR="$(echo "$ALLDIR" | cut -d';' -f5)"
+    # for i in $(seq 0 1 100)
+    # do
+    i=0
+    ITERATION=$(printf "%02d" $i)
+    sbatch "$SCRIPTDIR"/svc_searchlight "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$ANATDIR" "$ITERATION" "$SCRIPTDIR"
+    # done
+
+  fi
+
+  # control analysis based on the "same analysis approach" paper
+  if [ "$STEP" == "38" ]; then
+
+    sbatch "$SCRIPTDIR"/svc_control "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  # calculate mean beta
+  if [ "$STEP" == "39" ]; then
+
+    sbatch "$SCRIPTDIR"/mean_beta "$INPUTDIR" "$SCRIPTDIR" "$SUBJECT"
+    # sbatch "$SCRIPTDIR"/svc_time_generalization "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR"
+
+  fi
+
+  # get the laminar profiles
+  if [ "$STEP" == "40" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    LAYERMASKFILE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f7)"
+    HEMISPHEREMASK="$(echo "$ALLDIR" | cut -d';' -f8)"
+
+    sbatch "$SCRIPTDIR"/laminar_profile "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK" "$SCRIPTDIR"
+
+  fi
+
+  if [ "$STEP" == "41" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    LAYERMASKFILE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f7)"
+    HEMISPHEREMASK="$(echo "$ALLDIR" | cut -d';' -f8)"
+
+    sbatch "$SCRIPTDIR"/contrast_profile "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK" "$SCRIPTDIR"
+
+  fi
+  ############################################
+  #ROI EXTRACTION
+  ############################################
+
+  # label
+  if [ "$STEP" == "42" ]; then
+
+    sbatch "$SCRIPTDIR"/tmap2roi "$INPUTDIR" "$OUTPUTDIR" "$SUBJECT" "$SCRIPTDIR"
+
+  fi
+
+  if [ "$STEP" == "43" ]; then
+
+    sbatch "$SCRIPTDIR"/roi2mask "$INPUTDIR" "$OUTPUTDIR" "$SUBJECT"
+
+  fi
+
+  ############################################
+  #STATISTICAL AND CONTROL ANALYSIS
+  ############################################
+
+  if [ "$STEP" == "44" ]; then
+
+    for ITERATION in echo {1..100}; do
+      sbatch "$SCRIPTDIR"/prevalence "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$ITERATION"
+    done
+  fi
+
+  if [ "$STEP" == "45" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    TMAP_LOC="$(echo "$ALLDIR" | cut -d';' -f7)"
+    TMAP_MAIN="$(echo "$ALLDIR" | cut -d';' -f8)"
+
+    sbatch "$SCRIPTDIR"/control "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYER_FILE" "$TMAP_LOC" "$TMAP_MAIN" "$SCRIPTDIR"
+
+  fi
+
+  if [ "$STEP" == "46" ]; then
+
+    python "$SCRIPTDIR"/first_volume.py "$INPUTDIR"
+
+  fi
+
+  if [ "$STEP" == "47" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    sbatch "$SCRIPTDIR"/nilearn_first_level "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$MASKFILE" "$SCRIPTDIR"
+
+  fi
+
+  if [ "$STEP" == "48" ]; then
+
+    python "$SCRIPTDIR"/euclidean_distance.py "$INPUTDIR" "$OUTPUTDIR"
+
+  fi
+
+  if [ "$STEP" == "49" ]; then
+
+    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    sbatch "$SCRIPTDIR"/tsnr_control "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$LAYER_FILE" "$SCRIPTDIR" # "$SUBJECT"
+    # python "$SCRIPTDIR"/n_voxel.py "$WORKINGDIR" "$OUTPUTDIR" "$LAYER_FILE"
+
+  fi
+
+  if [ "$STEP" == "50" ]; then
+
+    MASK_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    python "$SCRIPTDIR"/trial_avg_pilot.py "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$MASK_FILE" "$SUBJECT"
+
+  fi
+
+  if [ "$STEP" == "51" ]; then
+
+    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TSV_FILE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    python "$SCRIPTDIR"/layer_timeseries.py "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$LAYER_FILE" "$TSV_FILE" "$SUBJECT"
+
+  fi
+
+<<<<<<< HEAD
+  # multivariate noise normalization
+  if [ "$STEP" == "52" ]; then
+
+    sbatch --array=0-3839 "$SCRIPTDIR"/multi_beta_decoding "$INPUTDIR" "$SCRIPTDIR"
+
+  fi
+
+  #  beta decoding
+  if [ "$STEP" == "53" ]; then
+
+    MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
+    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f7)"
+    sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$SCRIPTDIR" "$SUBJECT" "$MASKFILE" "$TMAP" "$LAYER_FILE"
+=======
+    # multivariate beta decoding
+  if [ "$STEP" == "52" ]; then
+    LAYER_FILE="$(echo "$ALLDIR" | cut -d';' -f5)"
+    TMAP_FILE="$(echo "$ALLDIR" | cut -d';' -f6)"
+    sbatch "$SCRIPTDIR"/beta_decoding "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$LAYER_FILE" "$TMAP_FILE"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+  fi
+
+fi

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#SBATCH --job-name=transform
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=48:00:00
+#SBATCH --mem-per-cpu=26000
+
+# MEM fo Bold dataset = 25Gb
+
+FIXEDIMAGE="$1"
+MOVINGIMAGE="$2"
+AFFINE="$3"
+DEFIELD="$4"
+OUTPUTIMG="$5"
+
+echo "ants apply transform to $MOVINGIMAGE output in: $OUTPUTIMG"
+# create epi mask
+# antsApplyTransforms --interpolation BSpline[5] -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t "$AFFINE" -o "$OUTPUTIMG" -v 1 --float 1
+
+# time series: Epi to Orig
+antsApplyTransforms -e 3 --interpolation BSpline[5] -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t "$DEFIELD" -t "$AFFINE" -o "$OUTPUTIMG" -v 1 --float 1
+# antsApplyTransforms -e 3 --interpolation BSpline[5] -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t "$DEFIELD" -o "$OUTPUTIMG" -v 1 --float 1
+
+#Mask to mean_epi
+# antsApplyTransforms -d 3 -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t "$AFFINE" -t "$DEFIELD" -o "$OUTPUTIMG" -n NearestNeighbor
+# antsApplyTransforms -d 3 -n NearestNeighbor -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t ["$AFFINE", 1] -t "$DEFIELD" -o "$OUTPUTIMG"
+
+#T1 to mean_epi
+# antsApplyTransforms -d 3 -i "$MOVINGIMAGE" -r "$FIXEDIMAGE" -t "$AFFINE" -t "$DEFIELD" -o "$OUTPUTIMG" -v 1 --float 1 --interpolation BSpline[5]

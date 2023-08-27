@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#SBATCH --job-name=beta_mean
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=3gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+SCRIPTDIR="$2"
+SUB="$3"
+
+# python "$SCRIPTDIR/mean_beta_psc.py" "$INPUTDIR"
+python "$SCRIPTDIR/mean_beta.py" "$INPUTDIR"
+<<<<<<< HEAD
+# python "$SCRIPTDIR/mean_contrast.py" "$INPUTDIR"
+=======
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+# python "$SCRIPTDIR/mean_beta_vaso2.py" "$INPUTDIR"  #MEM 1GB
+# python "$SCRIPTDIR/mean_beta_full_session.py" "$INPUTDIR" "$SUB" #MEM 1GB

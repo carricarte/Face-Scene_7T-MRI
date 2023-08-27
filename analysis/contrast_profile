@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#SBATCH --job-name=contrast_profile
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=8gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+# 96 GB for the laminar profile script
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+MASKFILE="$3"
+LAYERMASKFILE="$4"
+TMAP="$5"
+HEMISPHEREMASK="$6"
+SCRIPTDIR="$7"
+
+#INPUTDIR="/Users/carricarte/scratch/projects/imagery/pilot/bold/pilot_07/derivatives/sub-10/analysis/no_smoothing/devein_linear/beta/run-01/con_0009.nii"
+#OUTPUTFILE1="/Users/carricarte/scratch/projects/imagery/pilot/bold/pilot_07/derivatives/sub-10/analysis/no_smoothing/devein_linear/beta/run-01/tr_con_0009.nii"
+#ImageMath 3 $OUTPUTFILE1 TruncateImageIntensity $INPUTDIR
+
+python "$SCRIPTDIR/contrast_profile.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"

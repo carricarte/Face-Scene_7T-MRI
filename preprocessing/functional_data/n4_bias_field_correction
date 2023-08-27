@@ -1,0 +1,38 @@
+#!/bin/sh
+
+#SBATCH --job-name=N4BiasFieldCorrection
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=48:00:00
+#SBATCH --mem-per-cpu=4000
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+
+# INPUTDIR="/Users/carricarte/PhD/Debugging/vaso/main/sub-01/anat/mk_registered_InverseWarp.nii"
+OUTPUTDIR=`dirname "$INPUTDIR"`
+NAME=`basename "$INPUTDIR"`
+
+OUTPUTFILE1=$OUTPUTDIR/"tr_$NAME"
+OUTPUTFILE2=$OUTPUTDIR/"bc_$NAME"
+# OUTPUTFILE3=$OUTPUTDIR/"BiasField.nii.gz"
+
+ImageMath 3 $OUTPUTFILE1 TruncateImageIntensity $INPUTDIR 0.0001 0.9999
+
+#DenoiseImage \
+#--verbose 1 \
+#--image-dimensionality 3  \
+#--input-image "$OUTPUTFILE1" \
+#--shrink-factor 1  \
+#--output "$OUTPUTFILE2"
+
+N4BiasFieldCorrection \
+--verbose 1 \
+--image-dimensionality 3  \
+--input-image "$OUTPUTFILE1" \
+--shrink-factor 1  \
+--output [ "$OUTPUTFILE2", "$OUTPUTDIR"/BiasField.nii ] \
+--convergence [50x50x50x50,0.0] \
+--bspline-fitting [1x1x1,3]

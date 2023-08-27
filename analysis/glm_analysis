@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#SBATCH --job-name=1_level
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=48:00:00
+#SBATCH --mem-per-cpu=2gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+WORKINGDIR="$3"
+SUBJECT="$4"
+SPMDIR="$5"
+MATLABDIR="$6"
+SCRIPTDIR="$7"
+MASK="$8"
+
+# python "$SCRIPTDIR/glm_analysis_task_img_vaso.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
+# python "$SCRIPTDIR/glm_analysis_task_img_vaso_full_session.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
+<<<<<<< HEAD
+# python "$SCRIPTDIR/glm_analysis_task_img.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$MASK" "$SPMDIR" "$MATLABDIR"
+# python "$SCRIPTDIR/glm_analysis_task_loc.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
+python "$SCRIPTDIR/glm_analysis.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
+# python "$SCRIPTDIR/glm_analysis_task_img_ori.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
+=======
+# python "$SCRIPTDIR/glm_analysis_task_img.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
+# python "$SCRIPTDIR/glm_analysis_task_loc.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR"
+python "$SCRIPTDIR/glm_analysis.py" "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SUBJECT" "$SPMDIR" "$MATLABDIR" "$MASK"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+# glm_analysis_task_img MEM: 2GB Time: 11-19 hours
+# glm_analysis_task_img_vaso MEM: 1GB Time: 15 min

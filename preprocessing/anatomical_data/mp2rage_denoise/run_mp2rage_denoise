@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#SBATCH --job-name=mp2rage_denoise
+#SBATCH --nodes=1
+#SBATCH --time=60:00
+#SBATCH --mem=4096
+#SBATCH --qos=standard
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+	
+	echo "########################################"
+	echo "Uncompressing nifti"
+	echo "########################################"
+
+	INPUTDIR=$1
+	WORKINGDIR=$2
+	SUBJECT=$3
+	SCRIPTDIR=$4
+
+	mri_convert $INPUTDIR/*INV1*.nii.gz $INPUTDIR/INV1.nii
+	mri_convert $INPUTDIR/*INV2*.nii.gz $INPUTDIR/INV2.nii
+	mri_convert $INPUTDIR/*UNI*.nii.gz $INPUTDIR/UNI.nii
+
+	echo "########################################"
+	echo "MP2RAGE denoising"
+	echo "########################################"
+
+	matlab -nodisplay -nosplash -nodesktop -r "cd('$SCRIPTDIR'); mp2rage_denoise('$INPUTDIR', '$WORKINGDIR'); exit"
+
+	cd $INPUTDIR
+	mv 'sub-'"$SUBJECT"'_acq-UNI_run-01_MP2RAGE.json' 'sub-'"$SUBJECT"'_acq-MP2RAGE_T1w.json'
+	mv 'dUNI.nii' 'sub-'"$SUBJECT"'_acq-MP2RAGE_T1w.nii'
+	# rm *UNI* *INV*

@@ -1,0 +1,16 @@
+FATAL:   could not open image /home/carricarte/layer_mri/pipeline/bids/bidskit.sif: failed to retrieve path for /home/carricarte/layer_mri/pipeline/bids/bidskit.sif: lstat /home/carricarte/layer_mri/pipeline/bids/bidskit.sif: no such file or directory
+
+== Epilog Slurmctld ==================================================
+
+Job ID: 11613887
+Cluster: curta
+User/Group: carricarte/root
+State: FAILED (exit code 255)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:01 core-walltime
+Job Wall-clock time: 00:00:01
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 0.00 MB (0.00 MB/node)
+
+======================================================================

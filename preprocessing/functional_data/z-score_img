@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#SBATCH --job-name=z-score
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=45:00:00
+#SBATCH --mem-per-cpu=54000
+
+INPUTDIR="$1"
+LAYERDIR="$2"
+SCRIPTDIR="$3"
+
+python "$SCRIPTDIR"/z-score_img.py "$INPUTDIR" "$LAYERDIR"

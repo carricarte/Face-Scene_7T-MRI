@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#SBATCH --job-name=devein
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=48:00:00
+#SBATCH --mem-per-cpu=20gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+LAYERDIR="$2"
+COLUMNDIR="$3"
+ALFNIIDIR="$4"
+
+# LN2_DEVEIN -layer_file "$LAYERDIR" -column_file "$COLUMNDIR" -input "$INPUTDIR" -ALF "$ALFNIIDIR"
+LN2_DEVEIN -linear -layer_file lo_layers.nii -input lo_BOLD_act.nii

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#SBATCH --job-name=layerification
+#SBATCH --ntasks=1
+#SBATCH --qos=standard
+#SBATCH --time=01:00:00
+#SBATCH --mem-per-cpu=8gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+SCRIPTDIR="$3"
+
+python "$SCRIPTDIR/get_layer.py" "$INPUTDIR" "$OUTPUTDIR"

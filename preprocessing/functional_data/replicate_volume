@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#SBATCH --job-name=replicate
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=02:00:00
+#SBATCH --mem-per-cpu=96gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+VOLUME="$1"
+NEW4DVOLUME="$2"
+HISLICE="$3"
+TR="$4"
+
+echo "##################"
+echo "3D to 4D"
+echo "##################"
+
+echo "VOLUME: $VOLUME"
+echo "NEWVOLUME: $NEW4DVOLUME"
+echo "SCANS: $HISLICE"
+echo "TR: $TR"
+
+#VOLUME='/scratch/carricarte/projects/imagery/pilot_07/derivatives/sub-01/anat/sub-01_acq-MP2RAGE_T1w_fwhm-30_reg-0.001_samp-2.nii'
+#NEW4DVOLUME="/scratch/carricarte/projects/imagery/pilot_07/derivatives/sub-01/anat//test.nii"
+#HISLICE=10
+#TR=3
+
+ImageMath 3 "$NEW4DVOLUME" ReplicateImage "$VOLUME" "$HISLICE" "$TR" 0

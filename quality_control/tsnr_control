@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#SBATCH --job-name=tsnr
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=04:00:00
+#SBATCH --mem-per-cpu=2gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+WORKINGDIR="$3"
+LAYER_FILE="$4"
+SCRIPTDIR="$5"
+
+python "$SCRIPTDIR"/tsnr_comp.py "$INPUTDIR"
+# python "$SCRIPTDIR"/tsnr_analysis.py "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$LAYER_FILE"
+# LN_SKEW -input "$INPUTDIR"/cr_rsub-"$SUB"_task-loc_run-01_bold.nii
+
+# the tsnr_comp.py code needs at least 16gb

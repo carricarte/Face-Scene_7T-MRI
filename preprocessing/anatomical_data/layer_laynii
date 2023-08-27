@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#SBATCH --job-name=cortical_folding
+#SBATCH --ntasks=1
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=5000
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+MASKDIR="$3"
+SCRIPTDIR="$4"
+
+cd "$OUTPUTDIR"
+
+# rm *300*
+# rm *ribbon*
+
+cd "$INPUTDIR"
+
+# mri_convert ribbon.mgz "$OUTPUTDIR/ribbon.nii"
+
+cd "$OUTPUTDIR"
+
+# LN2_RIMIFY -input ribbon_corr.nii.gz -innergm 2 -outergm 0 -gm 3 -output rh_ribbon.nii
+# LN2_RIMIFY -input ribbon_corr.nii.gz -innergm 41 -outergm 0 -gm 42 -output lh_ribbon.nii
+
+#sleep 30 &
+#process_id=$!
+#wait $process_id
+
+LN2_LAYERS -rim rh_ribbon.nii -equivol -output rh -debug
+LN2_LAYERS -rim lh_ribbon.nii -equivol -output lh -debug
+
+# LN_COLUMNAR_DIST -layers lh_layers_equivol.nii -landmarks landmark.nii
+
+# python "$SCRIPTDIR/mask_ribbon.py" "$OUTPUTDIR/rh_midGM_equivol.nii" "$OUTPUTDIR/rh_ribbon.nii" "$MASKDIR/left_mask.nii" "$MASKDIR/mask.nii"
+# python "$SCRIPTDIR/mask_ribbon.py" "$OUTPUTDIR/lh_midGM_equivol.nii" "$OUTPUTDIR/lh_ribbon.nii" "$MASKDIR/right_mask.nii" "$MASKDIR/mask.nii"
+
+python "$SCRIPTDIR/mask_ribbon.py" "$OUTPUTDIR/rim_midGM_equivol.nii.gz" "$OUTPUTDIR/rim.nii.gz" "rh_" "$MASKDIR/left_mask.nii" "$MASKDIR/mask.nii"
+python "$SCRIPTDIR/mask_ribbon.py" "$OUTPUTDIR/rim_midGM_equivol.nii.gz" "$OUTPUTDIR/rim.nii.gz" "lh_" "$MASKDIR/right_mask.nii" "$MASKDIR/mask.nii"
+
+LN2_COLUMNS -rim rh_rim.nii.gz -midgm rh_rim_midGM_equivol.nii.gz -nr_columns 20000
+LN2_COLUMNS -rim lh_rim.nii.gz -midgm lh_rim_midGM_equivol.nii.gz -nr_columns 20000
+
+#python "$SCRIPTDIR/ribbon_conv.py" "$OUTPUTDIR" "$OUTPUTDIR"

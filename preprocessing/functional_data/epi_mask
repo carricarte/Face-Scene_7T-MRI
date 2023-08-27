@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#SBATCH --job-name=epi_mask
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=1000
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+INPUTDIR="$1"
+OUTPUTDIR=`dirname "$INPUTDIR"`
+# NAME=`basename "$INPUTDIR"`
+
+# ORIGINAL
+3dAutomask -prefix "$OUTPUTDIR"/epi_mask_bold.nii -peels 4 -dilate 1 -overwrite $INPUTDIR
+3dinfill -blend SOLID -ed 3 1 -prefix epi_mask.nii -minhits 2 -input "$OUTPUTDIR"/epi_mask_bold.nii
+
+#Mod for sub-01 localizer volume
+# 3dAutomask -prefix "$OUTPUTDIR"/epi_mask.nii -peels 0 -dilate 0 -overwrite $INPUTDIR
+# 3dinfill -blend SOLID -ed 3 1 -prefix epi_mask.nii -minhits 2 -input "$OUTPUTDIR"/epi_mask.nii
+# ImageMath 3 "$INPUTDIR/fll_$NAME" FillHoles $INPUTDIR

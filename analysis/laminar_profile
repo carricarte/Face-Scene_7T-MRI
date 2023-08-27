@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#SBATCH --job-name=laminar_profile
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=24:00:00
+#SBATCH --mem-per-cpu=1500
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+# 10 GB for the laminar pattern script
+
+INPUTDIR="$1"
+OUTPUTDIR="$2"
+MASKFILE="$3"
+LAYERMASKFILE="$4"
+TMAP="$5"
+HEMISPHEREMASK="$6"
+SCRIPTDIR="$7"
+
+<<<<<<< HEAD
+python "$SCRIPTDIR/laminar_profile_control.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
+# python "$SCRIPTDIR/laminar_profile.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
+=======
+# python "$SCRIPTDIR/laminar_profile_control.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
+python "$SCRIPTDIR/laminar_profile.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" "$TMAP" "$HEMISPHEREMASK"
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+# python "$SCRIPTDIR/laminar_pattern.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" # > output_sub14.txt
+# python "$SCRIPTDIR/laminar_pattern_cross.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$LAYERMASKFILE" # > output_sub14.txt
+# python "$SCRIPTDIR/beta_plot.py" "$INPUTDIR" "$OUTPUTDIR" "$MASKFILE" "$TMAP" "$HEMISPHEREMASK"

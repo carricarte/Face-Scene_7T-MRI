@@ -1,0 +1,105 @@
+#!/bin/sh
+
+#SBATCH --job-name=coregistration
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=14-00:00:00
+#SBATCH --mem-per-cpu=16gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+FIXEDIMAGE="$1"
+MOVINGIMAGE="$2"
+MASK="$3"
+MATRIX="$4"
+OUTPUTDIR="$5"
+
+#MODIFIED FOR sub-01
+#antsRegistration \
+#--verbose 1 --dimensionality 3  \
+#--initialize-transforms-per-stage 0 \
+#--collapse-output-transforms 1  \
+#--interpolation Linear \
+#--output ["$OUTPUTDIR"/registered_,"$OUTPUTDIR"/registered_Warp.nii,"$OUTPUTDIR"/registered_InverseWarp.nii]  \
+#--transform SyN[0.2,4,3]  \
+#--metric CC["$FIXEDIMAGE","$MOVINGIMAGE",1,5, Random, 0.3]  \
+#--convergence [50x50x150x100,1e-6,5]  \
+#--smoothing-sigmas 2x1x0.5x0vox  \
+#--shrink-factors 3x2x2x1  \
+# --use-histogram-matching 0 \
+# --winsorize-image-intensities [ 0.001, 0.999 ] \
+# --write-composite-transform 0 \
+#-x "$MASK"
+
+#ORIGINAL
+#antsRegistration \
+#--verbose 1 --dimensionality 3  \
+#--initialize-transforms-per-stage 0 \
+#--collapse-output-transforms 1  \
+#--interpolation Linear \
+#--output ["$OUTPUTDIR"/registered_,"$OUTPUTDIR"/registered_Warp.nii,"$OUTPUTDIR"/registered_InverseWarp.nii]  \
+#--transform Rigid[0.1]  \
+#--metric CC["$FIXEDIMAGE","$MOVINGIMAGE",1,5,Random,0.3]  \
+#--convergence [1000x1000x1000x1000,1e-6,10]  \
+#--smoothing-sigmas 4x3x2x1vox  \
+#--shrink-factors 1x1x1x1  \
+#--use-histogram-matching 0  \
+#--winsorize-image-intensities [0.001,0.999]  \
+#--initial-moving-transform "$MATRIX" \
+#-x "$MASK" \
+#--transform SyN[0.2,4,3]  \
+#--metric CC["$FIXEDIMAGE","$MOVINGIMAGE",1,5, Random, 0.3]  \
+#--convergence [50x50x150x100,1e-6,5]  \
+#--smoothing-sigmas 2x1x0.5x0vox  \
+#--shrink-factors 3x2x2x1  \
+# --use-histogram-matching 0 \
+# --winsorize-image-intensities [ 0.001, 0.999 ] \
+# --write-composite-transform 0 \
+#-x "$MASK"
+
+
+antsRegistration \
+--verbose 1 --dimensionality 3  \
+--initialize-transforms-per-stage 0 \
+--collapse-output-transforms 1  \
+--interpolation Linear \
+--output ["$OUTPUTDIR"/registered_,"$OUTPUTDIR"/registered_Warp.nii,"$OUTPUTDIR"/registered_InverseWarp.nii]  \
+--transform Rigid[0.1]  \
+--metric CC["$FIXEDIMAGE","$MOVINGIMAGE",1,5,Random,0.3]  \
+--convergence [1000x1000x1000x1000,1e-6,10]  \
+--smoothing-sigmas 4x3x2x1vox  \
+--shrink-factors 1x1x1x1  \
+--use-histogram-matching 0  \
+--winsorize-image-intensities [0.001,0.999]  \
+--initial-moving-transform "$MATRIX" \
+--transform Affine[0.1] \
+--metric MI["$FIXEDIMAGE","$MOVINGIMAGE",0.7,32,Regular,0.1] \
+--convergence [1000x500,1e-6,10] \
+--shrink-factors 2x1 \
+--smoothing-sigmas 1x0vox \
+--transform SyN[0.2,4,3]  \
+--metric CC["$FIXEDIMAGE","$MOVINGIMAGE",1,5, Random, 0.3]  \
+--convergence [50x50x150x100,1e-6,5]  \
+--smoothing-sigmas 2x1x0.5x0vox  \
+--shrink-factors 3x2x2x1  \
+ --use-histogram-matching 0 \
+ --winsorize-image-intensities [ 0.001, 0.999 ] \
+ --write-composite-transform 0 \
+-x "$MASK"
+
+# QUICK ANTS REGISTRATION
+#antsRegistration \
+#--verbose 1 --dimensionality 3  \
+#--initialize-transforms-per-stage 0 \
+#--collapse-output-transforms 1  \
+#--interpolation Linear \
+#--transform SyN[0.2, 4, 3]   \
+#--output ["$OUTPUTDIR"/registered_, "$OUTPUTDIR"/registered_Warped.nii, "$OUTPUTDIR"/registered_Warp.nii, "$OUTPUTDIR"/registered_Potato.nii]  \
+#--metric MI"[$FIXEDIMAGE,$MOVINGIMAGE,1,8,Regular,0.50]"  \
+#--convergence "[ 50,1e-6,10 ]"  \
+#--smoothing-sigmas "2vox"  \
+#--shrink-factors "2"  \
+#--use-histogram-matching 0  \
+#--winsorize-image-intensities "[0.001,0.999]" \
+#--initial-moving-transform "$MATRIX"

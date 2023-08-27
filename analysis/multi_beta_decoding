@@ -1,0 +1,50 @@
+#!/bin/sh
+
+#SBATCH --job-name=beta_decoding
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=14-00:00:00
+#SBATCH --mem=45gb
+
+BASEDIR="$1"
+SCRIPTDIR="$2"
+
+# python "$SCRIPTDIR/svc_identity.py" "$INPUTDIR" "$MASKDIR" "$TMAPDIR" "$LAYERMASKDIR"
+# python "$SCRIPTDIR/mnn_beta.py" "$INPUTDIR" "$MASKDIR" "$TMAPDIR" "$LAYERMASKDIR" "$OUTPUTDIR" # 58GB
+# python "$SCRIPTDIR/svc_identity.py" "$INPUTDIR" "$MASKDIR" "$TMAPDIR" "$LAYERMASKDIR" "$OUTPUTDIR"
+
+START=1
+END=12
+
+index=0
+for sub in 'sub-01' 'sub-02' 'sub-03' 'sub-06' 'sub-07' 'sub-08' 'sub-09' 'sub-10' 'sub-11' 'sub-12' 'sub-13' 'sub-14' 'sub-15' 'sub-16' 'sub-17' 'sub-18'; do
+  for vox in "550" "600" "650" "700" "750"; do
+  # for vox in "50" "100" "150" "200" "250" "300" "350" "400" "450" "500" "550" "600" "650" "700" "750"; do
+    for cond in 'FFA_per' 'FFA_img' 'PPA_per' 'PPA_img'; do
+      for r in $(seq $START $END); do
+
+        INPUTDIR="$BASEDIR/$sub/analysis/no_smoothing/beta/decoding"
+        MASKDIR="$BASEDIR/$sub/mask"
+        TMAPDIR="$BASEDIR/$sub/analysis/localizer"
+        LAYERMASKDIR="$BASEDIR/$sub/anat/rim_layers_equivol.nii"
+        OUTPUTDIR="$BASEDIR/$sub/analysis/identity"
+
+        combinations[$index]="$vox $cond $(printf "%02d" $r) $INPUTDIR $MASKDIR $TMAPDIR $LAYERMASKDIR $OUTPUTDIR"
+        index=$((index + 1))
+      done
+    done
+  done
+done
+parameters=(${combinations[${SLURM_ARRAY_TASK_ID}]})
+
+voxel=${parameters[0]}
+condition=${parameters[1]}
+run=${parameters[2]}
+inputdir=${parameters[3]}
+maskdir=${parameters[4]}
+tmapdir=${parameters[5]}
+layerdir=${parameters[6]}
+resdir=${parameters[7]}
+
+python "$SCRIPTDIR/mnn_beta.py" "$inputdir" "$maskdir" "$tmapdir" "$layerdir" "$resdir" "$voxel" "$condition" "$run"

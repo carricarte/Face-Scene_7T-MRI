@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#SBATCH --job-name=dicom2nii_vaso
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+#SBATCH --mail-type=end
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=350
+#SBATCH --time=03:00:00
+#SBATCH --qos=standard
+
+INPUTDIR="$1"
+SUBJECT="$2"
+
+#input_dir=$INPUTDIR"/work/conversion/sub-""$SUBJECT"
+#cd input_dir
+#for dir in ls *vaso*
+#do
+#  rm $dir
+#done
+
+# Reconvert VASO dicom to nii
+
+echo "fange an"
+
+
+input_dir="$INPUTDIR/sourcedata/incoming/""$SUBJECT"
+cd $input_dir/
+for folder in grep *vaso*
+do
+  echo $folder
+  Dimon -quiet -sort_by_acq_time -infile_pattern "$folder/*.dcm" -dicom_org -gert_create_dataset -gert_to3d_prefix "$folder.nii"
+  mv "$input_dir/$folder.nii" "$INPUTDIR/work/conversion/sub-$SUBJECT/"
+  rm *dicom*
+  rm *dimon*
+  rm *BRIK*
+  rm *HEAD*
+
+done
+
+echo "und tschuess"

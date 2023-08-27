@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#SBATCH --job-name=devein
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=08:00:00
+#SBATCH --mem-per-cpu=1600
+
+
+# MEM=2GB
+# TIME=2 h 10 min
+
+INPUTDIR="$1"
+LAYERDIR="$2"
+COLUMNDIR="$3"
+ALFNIIDIR="$4"
+SCRIPTDIR="$5"
+
+# echo "devein time series"
+echo "devein betas"
+
+cd $INPUTDIR
+
+declare -a CONDITION
+<<<<<<< HEAD
+CONDITION=('mean_beta_img_face.nii' 'mean_beta_img_place.nii' 'mean_beta_seen_face.nii' 'mean_beta_seen_place.nii')
+# CONDITION=('psc_img_face.nii' 'psc_img_place.nii' 'psc_seen_face.nii' 'psc_seen_place.nii')
+=======
+# CONDITION=('mean_beta_img_face.nii' 'mean_beta_img_place.nii' 'mean_beta_seen_face.nii' 'mean_beta_seen_place.nii')
+CONDITION=('psc_img_face.nii' 'psc_img_place.nii' 'psc_seen_face.nii' 'psc_seen_place.nii')
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+
+COND=${CONDITION[${SLURM_ARRAY_TASK_ID}]}
+scp $COND "rh_$COND"
+scp $COND "lh_$COND"
+
+# LN2_DEVEIN -linear -layer_file "$LAYERDIR" -input "rh_$COND"
+# LN2_DEVEIN -linear -layer_file "$LAYERDIR" -input "lh_$COND"
+
+LN2_DEVEIN -layer_file "$LAYERDIR" -column_file "$COLUMNDIR/rh_rim_columns20000.nii.gz" -input "rh_$COND" -ALF "$ALFNIIDIR" # -lambda 0.3
+LN2_DEVEIN -layer_file "$LAYERDIR" -column_file "$COLUMNDIR/lh_rim_columns20000.nii.gz" -input "lh_$COND" -ALF "$ALFNIIDIR" # -lambda 0.3
+
+python "$SCRIPTDIR"/volume_combine.py $INPUTDIR/"rh_$(echo "$COND" | cut -d'.' -f 1)_deveinDeconv.nii" $INPUTDIR/"lh_$(echo "$COND" | cut -d'.' -f 1)_deveinDeconv.nii"
+# python "$SCRIPTDIR"/volume_combine.py $INPUTDIR/"rh_$(echo "$COND" | cut -d'.' -f 1)_deveinCBV.nii" $INPUTDIR/"lh_$(echo "$COND" | cut -d'.' -f 1)_deveinCBV.nii"
+# python "$SCRIPTDIR"/volume_combine.py $INPUTDIR/"rh_$(echo "$COND" | cut -d'.' -f 1)_deveinLinear.nii" $INPUTDIR/"lh_$(echo "$COND" | cut -d'.' -f 1)_deveinLinear.nii"
+

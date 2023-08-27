@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#SBATCH --job-name=ALF
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=48:00:00
+#SBATCH --mem-per-cpu=98gb
+
+# MEM= 98GB Time=25 min with localizer run
+
+INPUTDIR="$1"
+
+# LN_TEMPSMOOTH -input "$INPUTDIR" -box 2 -output lo_ALF.nii
+
+cd `dirname "$INPUTDIR"`
+# rm AFL*
+
+FILENAME=`basename "$INPUTDIR"`
+
+echo "$FILENAME"
+
+echo "starting ALF: Amplitude from low frequency Fluctuations"
+
+# fslfft "$FILENAME" "fslFFT_$FILENAME"
+fslpspec "$FILENAME" "fslFFT_$FILENAME"
+
+3dTstat -mean -prefix "AFL_$FILENAME" -overwrite "fslFFT_$FILENAME"
+
+3dcalc -a "AFL_$FILENAME" -expr 'a/10000' -prefix "AFL_$FILENAME" -overwrite
+
+
+#3dcalc -a "mean_fslFFT_$1" -b "fslFFT_$1" -expr 'b/a' -prefix "fslFFT_$1" -overwrite
+
+#rm "mean_fslFFT_$1"
+
+#3dTstat -mean -overwrite -prefix "ALF_$1" "fslFFT_$1"'[2..20]'  
+
+#3dcalc -a "mean_fslFFT_$1" -b "ALF_$1" -expr 'b/a' -prefix "normaliced_ALF_$1" -overwrite
+
+echo "done: I expect: ALF_melmac.sh Dataset_timeseries.nii"
+
+# NOTE: calculating the ALF file with the coregistered functional doesnt work properly. The output
+# appears stripped. Thus I do a manual coregistration with ITKSnap, after calculating the ALF file
+# with the non-coregistered functional
+

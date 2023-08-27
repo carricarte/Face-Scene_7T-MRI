@@ -1,0 +1,32 @@
+#!/bin/sh
+
+<<<<<<< HEAD
+#SBATCH --job-name=deconvolution
+=======
+#SBATCH --job-name=m_devein
+>>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=05:00:00
+#SBATCH --mem-per-cpu=1500
+
+INPUTDIR="$1"
+LAYERDIR="$2"
+COLUMNDIR="$3"
+ALFNIIDIR="$4"
+SCRIPTDIR="$5"
+
+path_name=`dirname "$INPUTDIR"`
+name=`basename "$INPUTDIR"`
+
+cd "$path_name"
+
+scp "$name" "rh_$name"
+scp "$name" "lh_$name"
+## rm *devein_linear*
+LN2_DEVEIN -layer_file "$LAYERDIR" -column_file "$COLUMNDIR/rh_rim_columns20000.nii.gz" -input "rh_$name" -ALF "$ALFNIIDIR"
+LN2_DEVEIN -layer_file "$LAYERDIR" -column_file "$COLUMNDIR/lh_rim_columns20000.nii.gz" -input "lh_$name" -ALF "$ALFNIIDIR"
+
+python "$SCRIPTDIR"/volume_combine.py $path_name/"rh_$(echo "$name" | cut -d'.' -f 1)_deveinDeconv.nii" $path_name/"lh_$(echo "$name" | cut -d'.' -f 1)_deveinDeconv.nii"

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#SBATCH --job-name=merge_def
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --qos=standard
+#SBATCH --time=02:00:00
+#SBATCH --mem-per-cpu=4gb
+#SBATCH --mail-type=end
+#SBATCH --mail-user=carricarte@zedat.fu-berlin.de
+
+FIXEDIMAGE="$1"
+AFFINE="$2"
+DEFIELD="$3"
+OUTPUTIMAGE="$4"
+
+echo "##################"
+echo "Merging fields"
+echo "##################"
+
+echo "FIXEDIMAGE: $FIXEDIMAGE"
+echo "AFFINE: $AFFINE"  
+echo "DEFIELD: $DEFIELD"  
+echo "OUTPUTIMAGE: $OUTPUTIMAGE"  
+
+# collapse the transformations to a displacement field
+antsApplyTransforms -d 3 -o ["$OUTPUTIMAGE", 1] -t "$DEFIELD" -t "$AFFINE" -r "$FIXEDIMAGE" -v 1
