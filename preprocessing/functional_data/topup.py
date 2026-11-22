@@ -24,8 +24,10 @@ with open(json_file) as j_file:
 
 if encoding_direction == "j":
     e_dir = [0, 1, 0, 0]
-elif encoding_direction == "j-" or "-j":
+elif encoding_direction in ("j-", "-j"):
     e_dir = [0, -1, 0, 0]
+else:
+    raise ValueError("Unsupported PhaseEncodingDirection: {}".format(encoding_direction))
 
 e_dir[3] = total_readout_time
 e_dir = np.tile(e_dir, (10, 1))

@@ -42,7 +42,8 @@ def data2glm(input_file, output_file):
 
     for e in range(0, len(events)):
 
-        ev, prev = events[e], events[e - 1]
+        ev = events[e]
+        prev = events[e - 1] if e > 0 else np.nan  # no event before the first one
         if (ev == 10 or (ev in (1, 2, 3, 4) and prev == 10) or (ev == 0 and prev == 31)
                 or (20 <= ev <= 30 and prev >= 20)):
             dindex[e] = 0

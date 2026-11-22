@@ -1,3 +1,4 @@
+import os
 import nibabel as nb
 import numpy as np
 from nilearn.image import index_img
@@ -5,7 +6,7 @@ from nilearn.image import index_img
 
 def load_nifti(nifti):
     """Return the data array for a file path, a nibabel image, or an array."""
-    if isinstance(nifti, str):
+    if isinstance(nifti, (str, os.PathLike)):
         return nb.load(nifti).get_fdata()
     if isinstance(nifti, nb.spatialimages.SpatialImage):
         return nifti.get_fdata()

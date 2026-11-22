@@ -39,7 +39,7 @@ for k, layer_mask in enumerate(mask_layer_list):
         masked_data = niimg[hemi_layer_mask != 0]
         # m = np.mean(masked_data, 1)
         # s = np.std(masked_data,1)
-        z_niimg[hemi_layer_mask != 0] = (masked_data - np.mean(np.mean(masked_data, 0))) / np.std(np.std(masked_data, 0))
+        z_niimg[hemi_layer_mask != 0] = (masked_data - np.mean(masked_data)) / np.std(masked_data)
         # z_data = (masked_data - m.reshape(len(m), 1))/s.reshape(len(m), 1)
         # print("hemisphere: {} layer: {} mean {}".format(h, layer[k], m))
 
