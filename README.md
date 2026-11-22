@@ -16,7 +16,7 @@ The study asks whether *seeing* and *imagining* faces and places engage differen
 The stimuli are two famous faces (Angela Merkel, Barack Obama) and two famous places (Berlin, Paris). Each one is either shown (*seen*) or imagined after a cue (*img*). Note that `data2glm_task_img.py` spells the seen-Berlin label `seen_berin`.
 
 - **Subjects:** `01`–`18` (the default set is the `#SBATCH --array` line in `main`)
-- **Runs per subject:** 9–12 (listed per subject in `analysis/glm_analysis_task_img.py`)
+- **Runs per subject:** 9–12 (the `N_RUNS` table in `analysis/glm_analysis.py` and `analysis/glm_analysis_task_img.py`)
 - **Acquisition:** 7T GE-BOLD, with VASO variants for some sessions, and an MP2RAGE anatomical scan
 
 ---
@@ -139,7 +139,7 @@ All paths are hardcoded for the original HPC cluster (`/home/carricarte/...`, `/
 
 1. Edit `PIPELINEDIR`, `SPMDIR` and `MATLABDIR` at the top of `main`.
 2. Update the path expressions in `paths.json`. They are evaluated by `check_path.py` with `subject` and `main_dir` (the pipeline directory) in scope, so script paths can be written as `os.path.join(main_dir, 'bids')` and data roots changed with a single find-and-replace.
-3. Check the per-subject `run_list` blocks in the GLM scripts, and the hardcoded paths in some analysis scripts (e.g. `analysis/data2glm_task_img.py`).
+3. Update the `N_RUNS` table in **both** `analysis/glm_analysis.py` and `analysis/glm_analysis_task_img.py` when adding subjects or dropping runs, and check and the hardcoded paths in some analysis scripts (e.g. `analysis/data2glm_task_img.py`).
 4. Adjust the `#SBATCH` directives (QOS, time, memory, array) to fit your scheduler.
 
 ---

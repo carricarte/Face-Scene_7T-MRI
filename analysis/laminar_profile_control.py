@@ -6,6 +6,7 @@ import image_stats
 from nilearn.image import new_img_like
 from os.path import join
 from os import listdir
+import warnings
 
 
 input_dir = sys.argv[1]
@@ -61,11 +62,16 @@ hemi_masks = {side: np.logical_and(roi_mask, image_stats.load_nifti(f) != 0)
               for side, f in (("right", right_mask_file), ("left", left_mask_file))}
 pre_masks = [{side: np.logical_and(m, layer_mask) for side, m in hemi_masks.items()}
              for layer_mask in mask_layer_list]
+layer_names = layers if len(pre_masks) == len(layers) else ["l{}".format(i + 1) for i in range(len(pre_masks))]
 
 
 def top_v_mask(tmap, pre_mask, v):
-    """Voxels in `pre_mask` whose t-value is at least the (v+1)-th largest."""
-    t_thr = np.sort(image_stats.img_mask(tmap, pre_mask))[-v - 1]
+    """The v voxels in `pre_mask` with the highest t-values (all voxels if fewer than v)."""
+    tvals = image_stats.img_mask(tmap, pre_mask)
+    if v > tvals.size:
+        warnings.warn("mask has {} voxels, fewer than v={}; using all of them".format(tvals.size, v))
+        v = tvals.size
+    t_thr = np.sort(tvals)[-v]  # v-th largest t-value
     return image_stats.threshold_mask(tmap, t_thr, pre_mask)
 
 
@@ -102,7 +108,6 @@ for v in voxel:
                 print(lp)
                 pf.loc[len(pf)] = lp
 
-            pf["layer"] = ["deep", "middle", "superficial"]
-            # pf["layer"] = ["l1", "l2" "l3" "l4" "l5", "l6"]
+            pf["layer"] = layer_names
             pf.to_csv(join(output_dir, '@lamprofile_{}_{}_{}_no-devein.tsv').format(h, a, v), sep='\t',
                       index=True)
