@@ -6,11 +6,8 @@ import sys
 from os import listdir
 from os.path import join
 
-# input_dir = sys.argv[1]
-input_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
-
-# output_dir = sys.argv[2]
-output_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
+input_dir = sys.argv[1]
+output_dir = sys.argv[2]
 
 
 TRIAL_TYPES = {1: 'Faces', 2: 'Places', 3: 'Objects', 4: 'Scrambled', 5: 'Baseline'}

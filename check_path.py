@@ -8,11 +8,16 @@ subject = sys.argv[3]
 
 paths_dict = os.path.join(main_dir, "paths.json")
 
-if os.path.exists(paths_dict) is None:
+if not os.path.exists(paths_dict):
+    sys.stderr.write("paths file not found: {}\n".format(paths_dict))
     sys.exit(1)
 
-file = open(paths_dict, "r")
-directories = json.load(file)
+with open(paths_dict, "r") as file:
+    directories = json.load(file)
+
+if key not in directories:
+    sys.stderr.write("step {} has no entry in {}\n".format(key, paths_dict))
+    sys.exit(1)
 
 status = 0
 all_dir = eval(directories[key][0])

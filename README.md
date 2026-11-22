@@ -104,14 +104,14 @@ Steps are numbered by stage. The comment above each `if [ "$STEP" == ... ]` bloc
 | 1–2 | File organisation (DICOM → NIfTI, BIDS) |
 | 3–13 | Anatomical preprocessing (MP2RAGE, FreeSurfer, nighres/LayNII layering) |
 | 14–27, 250 | Functional preprocessing (VASO split, topup, realignment, N4, deveining, ANTs registration, smoothing, z-scoring) |
-| 28–41 | Analysis (GLM events and first level, decoding, searchlight, mean betas, laminar profiles) |
+| 28–41, 54 | Analysis (GLM events and first level, decoding, searchlight, mean betas, laminar profiles; 54 = time series → dataframe) |
 | 42–43 | ROI extraction |
 | 44–53 | Statistics and control analyses |
 
 ### Known gaps
 
 - Some steps call scripts that are **not in this repository**: `anatomy`, `upsample`, `run_split_nulled_not_nulled`, `data2glm_vaso2.py`, `univariate_avg`, `nifti2dframe`, `svc_*`, `beta_decoding`, `multi_beta_decoding`, `contrast_profile`, `tmap2roi`, `roi2mask`, `prevalence`, `control`, `nilearn_first_level`, `trial_avg_pilot.py` and `layer_timeseries.py`.
-- Steps 16, 22, 38, 42, 47, 51 and 250 have no entry in `paths.json`, so `check_path.py` fails and nothing runs.
+- Steps 16, 22, 38, 42, 47, 51 and 250 have no entry in `paths.json`; `check_path.py` reports this and the step does not run.
 - Some block comments in `main` describe an older command: step 6 says "freesurfer part 1" but runs `upsample`, and step 8 says "freesurfer part 2 & 3" but runs `edge_detector.py`.
 
 ---
