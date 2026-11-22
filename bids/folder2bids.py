@@ -1,6 +1,6 @@
 import sys
 from os import listdir, makedirs
-from os.path import join, splitext, exists
+from os.path import join, splitext
 import shutil
 import re
 
@@ -35,23 +35,8 @@ deriv_anat_dir = join(output_dir, "derivatives", "sub-" + s, "anat")
 roi_dir = join(output_dir, "derivatives", "sub-" + s, "roi")
 mriqc_dir = join(output_dir, "derivatives", "mriqc")
 
-if not exists(func_dir):
-    makedirs(func_dir)
-
-if not exists(anat_dir):
-    makedirs(anat_dir)
-
-if not exists(deriv_func_dir):
-    makedirs(deriv_func_dir)
-
-if not exists(deriv_anat_dir):
-    makedirs(deriv_anat_dir)
-
-if not exists(roi_dir):
-    makedirs(roi_dir)
-
-if not exists(mriqc_dir):
-    makedirs(mriqc_dir)
+for d in (func_dir, anat_dir, deriv_func_dir, deriv_anat_dir, roi_dir, mriqc_dir):
+    makedirs(d, exist_ok=True)
 
 subject_dir = join(input_dir, f"sub-{s}")
 niftifiles = []

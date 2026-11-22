@@ -346,5 +346,11 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/localizer'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/rim_layers_equivol.nii'.format(subject)"
+    ],
+    "54":[
+        "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/behdata/sub-{0}/'.format(subject)",
+        "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/behdata/sub-{0}/'.format(subject)",
+        "'EXCLUDE'",
+        "'/home/carricarte/layer_mri/pipeline/analysis'"
     ]
 }

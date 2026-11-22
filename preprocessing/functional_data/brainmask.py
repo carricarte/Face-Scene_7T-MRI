@@ -1,8 +1,5 @@
 from os.path import join, split
-from os import listdir
-from nilearn.masking import compute_epi_mask, unmask, apply_mask
-from nilearn.maskers import NiftiMasker
-from nilearn.image import smooth_img, binarize_img, load_img, new_img_like
+from nilearn.image import load_img, new_img_like
 import sys
 
 # ma = ImageMath(op1="", operation="FillHoles")

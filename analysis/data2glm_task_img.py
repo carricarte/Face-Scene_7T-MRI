@@ -6,17 +6,18 @@ import sys
 from os import listdir
 from os.path import join
 
-# input_dir = sys.argv[1]
-input_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
-# output_dir = sys.argv[2]
-output_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
+input_dir = sys.argv[1]
+output_dir = sys.argv[2]
+
+# Event code -> trial_type label ("seen_berin" is the label the existing GLMs use)
+TRIAL_TYPES = {1: 'seen_merkel', 2: 'seen_obama', 3: 'seen_berin', 4: 'seen_paris',
+               5: 'img_merkel', 6: 'img_obama', 7: 'img_berlin', 8: 'img_paris',
+               9: 'rvsp', -1: 'visual_cue', -2: 'auditory_cue', 0: 'baseline'}
+
 
 def data2glm(input_file, output_file):
 
-    import os
-    path, file = os.path.split(input_file)
-    filename, ext = os.path.splitext(file)
-    trial_type = ''
+    filename, ext = os.path.splitext(os.path.basename(input_file))
     data_struct = scipy.io.loadmat(input_file)
     events = data_struct['data'][0][0][2][0][0][0][0]
     upd_screen_time = data_struct['data'][0][0][2][0][0][23][0]
@@ -39,11 +40,14 @@ def data2glm(input_file, output_file):
 
     for e in range(0, len(events)):
 
-        if events[e] == 10 or (events[e] == 1 and events[e - 1] == 10) or (events[e] == 2 and events[e - 1] == 10) or (events[e] == 3 and events[e - 1] == 10) or (events[e] == 4 and events[e - 1] == 10) or (events[e] == 0 and events[e - 1] == 31) or ((events[e] >= 20 and events[e] <= 30) and events[e - 1] >= 20):
+        ev = events[e]
+        prev = events[e - 1] if e > 0 else np.nan  # no event before the first one
+        if (ev == 10 or (ev in (1, 2, 3, 4) and prev == 10) or (ev == 0 and prev == 31)
+                or (20 <= ev <= 30 and prev >= 20)):
             dindex[e] = 0
-        elif events[e] == -4 or events[e] == -3 or events[e] == -2 or events[e] == -1:
+        elif ev in (-4, -3, -2, -1):
             condition_order[e] = -1
-        elif events[e] == -5 or events[e] == -6 or events[e] == -7 or events[e] == -8:
+        elif ev in (-5, -6, -7, -8):
             condition_order[e] = -2
 
     condition_order = condition_order[dindex == 1]
@@ -57,18 +61,7 @@ def data2glm(input_file, output_file):
     temp = np.append(condition_onset[1:], [experiment_off])
     condition_dur = temp - condition_onset
 
-    trial_type = np.where(condition_order != 1, trial_type, 'seen_merkel')
-    trial_type = np.where(condition_order != 2, trial_type, 'seen_obama')
-    trial_type = np.where(condition_order != 3, trial_type, 'seen_berin')
-    trial_type = np.where(condition_order != 4, trial_type, 'seen_paris')
-    trial_type = np.where(condition_order != 5, trial_type, 'img_merkel')
-    trial_type = np.where(condition_order != 6, trial_type, 'img_obama')
-    trial_type = np.where(condition_order != 7, trial_type, 'img_berlin')
-    trial_type = np.where(condition_order != 8, trial_type, 'img_paris')
-    trial_type = np.where(condition_order != 9, trial_type, 'rvsp')
-    trial_type = np.where(condition_order != -1, trial_type, 'visual_cue')
-    trial_type = np.where(condition_order != -2, trial_type, 'auditory_cue')
-    trial_type = np.where(condition_order != 0, trial_type, 'baseline')
+    trial_type = np.vectorize(lambda c: TRIAL_TYPES.get(c, ''), otypes=[str])(condition_order)
 
     weight = np.ones(condition_order.shape)
 

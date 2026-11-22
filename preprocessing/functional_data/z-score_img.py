@@ -23,16 +23,7 @@ right_hemisphere_file = join(mask_dir, "right_mask.nii")
 hemi_left_mask = load_img(left_hemisphere_file).get_fdata()
 hemi_right_mask = load_img(right_hemisphere_file).get_fdata()
 
-def get_layer(ribbon_file):
-    ribbon_mask = load_img(ribbon_file).get_fdata()
-    layers = np.unique(ribbon_mask)
-
-    mask_list = []
-    for l in layers[layers != 0]:
-        mask_list.append(ribbon_mask == l)
-    return mask_list
-
-mask_layer_list = get_layer(layer_file)
+mask_layer_list = image_stats.get_layer(layer_file)
 ori_shape = mask_layer_list[0].shape
 niimg = image_stats.time_series_to_mat(input_dir)
 z_niimg = np.zeros(shape=niimg.shape)
@@ -48,7 +39,7 @@ for k, layer_mask in enumerate(mask_layer_list):
         masked_data = niimg[hemi_layer_mask != 0]
         # m = np.mean(masked_data, 1)
         # s = np.std(masked_data,1)
-        z_niimg[hemi_layer_mask != 0] = (masked_data - np.mean(np.mean(masked_data, 0))) / np.std(np.std(masked_data, 0))
+        z_niimg[hemi_layer_mask != 0] = (masked_data - np.mean(masked_data)) / np.std(masked_data)
         # z_data = (masked_data - m.reshape(len(m), 1))/s.reshape(len(m), 1)
         # print("hemisphere: {} layer: {} mean {}".format(h, layer[k], m))
 
