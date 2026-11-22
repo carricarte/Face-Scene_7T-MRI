@@ -1,12 +1,11 @@
-from nipype.interfaces.fsl import TOPUP, ApplyTOPUP
+from nipype.interfaces.fsl import TOPUP
 from nipype.interfaces.io import DataSink
 from nipype import Workflow, Node
-import subprocess
 from nilearn import image
 from os.path import join
 import pandas as pd
 import json
-from os import listdir, chdir
+from os import listdir
 import sys
 import numpy as np
 
@@ -38,12 +37,10 @@ np.savetxt(topup_file, params.values, fmt='%1.6f')
 # seq = ["vaso"]
 seq = ["bold", "vaso"]
 task = "task-img"
-task = "task-img"
 topup = Node(TOPUP(encoding_file=topup_file, output_type="NIFTI"), name="topup")
 # applytopup = Node(ApplyTOPUP(encoding_file=topup_file, output_type="NIFTI"), name="applytopup")
 # applytopup = ApplyTOPUP(encoding_file=topup_file, output_type="NIFTI")
 
-from nipype.interfaces.fsl import ApplyTOPUP
 fieldcorr_dir = join(fmap_dir, "field_corr")
 for s in seq:
 

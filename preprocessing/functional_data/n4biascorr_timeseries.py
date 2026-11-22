@@ -1,7 +1,7 @@
 import sys
 from os import listdir
 from os.path import split, join
-from nilearn.image import math_img, load_img, new_img_like, index_img
+from nilearn.image import load_img, new_img_like
 
 epi_dir = sys.argv[1]
 bias_file = sys.argv[2]
@@ -20,12 +20,7 @@ epi_files.sort()
 bias_img = load_img(bias_file).get_fdata()
 for epi in epi_files:
 
-    nifti_img = load_img(epi).get_fdata()
-    result_img = load_img(epi).get_fdata()
-
-    for v in range(0, result_img.shape[3]):
-        output_dir, filename = split(epi)
-        result_img[:, :, :, v] = nifti_img[:, :, :, v]/bias_img
-        # result_img[:, :, :, v] = math_img("img1 / img2", img1=index_img(epi, v), img2=bias_file).get_fdata()
-    result_img = new_img_like(epi, result_img)
+    output_dir, filename = split(epi)
+    # divide every volume by the bias field in one broadcast operation
+    result_img = new_img_like(epi, load_img(epi).get_fdata() / bias_img[..., None])
     result_img.to_filename(join(output_dir, "bc_" + filename))

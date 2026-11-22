@@ -13,19 +13,20 @@ n_layers = 3
 
 """ do not edit below """
 
+seg_img = nb.load(input_dir)
+seg_array = seg_img.get_fdata()
+
 # wm mask
-wm_img = nb.load(input_dir)
-wm_array = wm_img.get_fdata()
+wm_array = seg_array.copy()
 wm_array[wm_array == gm_val[0]] = 0
 wm_array[wm_array == gm_val[1]] = 0
 wm_array[wm_array != 0] = 1
-wm_mask = nb.Nifti1Image(wm_array, wm_img.affine, wm_img.header)
+wm_mask = nb.Nifti1Image(wm_array, seg_img.affine, seg_img.header)
 
 # csf mask
-csf_img = nb.load(input_dir)
-csf_array = csf_img.get_fdata()
+csf_array = seg_array
 csf_array[csf_array != 0] = 1
-csf_mask = nb.Nifti1Image(csf_array, csf_img.affine, csf_img.header)
+csf_mask = nb.Nifti1Image(csf_array, seg_img.affine, seg_img.header)
 
 # probability to levelset
 wm_level = probability_to_levelset(wm_mask)

@@ -23,13 +23,11 @@ runs = []
 
 runs.sort()
 
-mean_r = np.array([])
-
+flat_means = []
 for r in runs:
-    run = mean_img(r).get_fdata()
-    flatted_run = run.flatten()
-    flatted_run = flatted_run[np.logical_not(np.isnan(flatted_run))]
-    mean_r = np.vstack([mean_r, flatted_run]) if mean_r.size else flatted_run
+    flatted_run = mean_img(r).get_fdata().ravel()
+    flat_means.append(flatted_run[np.logical_not(np.isnan(flatted_run))])
+mean_r = np.stack(flat_means)
 
 corr_mat = np.tril(np.ma.corrcoef(mean_r))
 print(corr_mat)

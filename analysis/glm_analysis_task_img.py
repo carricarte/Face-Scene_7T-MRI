@@ -20,44 +20,9 @@ matlab_dir = sys.argv[7]
 spm.SPMCommand.set_mlab_paths(paths=spm_dir);
 print(spm.SPMCommand().version)
 
-if "01" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-elif "02" == subject_id:
-    # run_list = [1, 2, 3, 4, 5, 6, 7, 8]
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "03" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    # run_list = [1, 2, 3, 4, 5, 6, 7]
-elif "04" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-elif "05" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-elif "06" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "07" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-elif "08" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "09" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "10" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "11" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "12" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "13" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "14" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "15" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "16" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-elif "17" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-elif "18" == subject_id:
-    run_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# Number of main-task runs per subject (runs are numbered 1..N)
+N_RUNS = {"01": 9, "02": 10, "03": 10, "04": 12, "05": 12, "06": 10, "07": 12, "08": 10, "09": 10, "10": 10, "11": 10, "12": 10, "13": 10, "14": 10, "15": 10, "16": 10, "17": 12, "18": 10}
+run_list = list(range(1, N_RUNS[subject_id] + 1))
 # TR of functional images
 TR = 3
 

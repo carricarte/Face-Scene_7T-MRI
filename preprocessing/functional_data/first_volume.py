@@ -1,10 +1,6 @@
-import nibabel as nb
 from nilearn import image
-from nilearn.image import new_img_like, index_img
-from os.path import split, join, exists
-from os import listdir, mkdir
+from os.path import join
 import sys
-import numpy as np
 
 max_vol = 88
 
