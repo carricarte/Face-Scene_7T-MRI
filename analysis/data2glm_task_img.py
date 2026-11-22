@@ -6,10 +6,8 @@ import sys
 from os import listdir
 from os.path import join
 
-# input_dir = sys.argv[1]
-input_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
-# output_dir = sys.argv[2]
-output_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
+input_dir = sys.argv[1]
+output_dir = sys.argv[2]
 
 # Event code -> trial_type label ("seen_berin" is the label the existing GLMs use)
 TRIAL_TYPES = {1: 'seen_merkel', 2: 'seen_obama', 3: 'seen_berin', 4: 'seen_paris',

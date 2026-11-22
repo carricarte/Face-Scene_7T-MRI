@@ -17,6 +17,7 @@ LAYERDIR="$2"
 COLUMNDIR="$3"
 ALFNIIDIR="$4"
 SCRIPTDIR="$5"
+INPUTSET="${6:-psc}"  # which condition images to devein: "psc" (default) or "beta"
 
 # echo "devein time series"
 echo "devein betas"
@@ -24,13 +25,11 @@ echo "devein betas"
 cd $INPUTDIR
 
 declare -a CONDITION
-<<<<<<< HEAD
-CONDITION=('mean_beta_img_face.nii' 'mean_beta_img_place.nii' 'mean_beta_seen_face.nii' 'mean_beta_seen_place.nii')
-# CONDITION=('psc_img_face.nii' 'psc_img_place.nii' 'psc_seen_face.nii' 'psc_seen_place.nii')
-=======
-# CONDITION=('mean_beta_img_face.nii' 'mean_beta_img_place.nii' 'mean_beta_seen_face.nii' 'mean_beta_seen_place.nii')
-CONDITION=('psc_img_face.nii' 'psc_img_place.nii' 'psc_seen_face.nii' 'psc_seen_place.nii')
->>>>>>> e9c38f8738dd8dbe89fa92894a87eb1d36cd8302
+case "$INPUTSET" in
+  psc)  CONDITION=('psc_img_face.nii' 'psc_img_place.nii' 'psc_seen_face.nii' 'psc_seen_place.nii') ;;
+  beta) CONDITION=('mean_beta_img_face.nii' 'mean_beta_img_place.nii' 'mean_beta_seen_face.nii' 'mean_beta_seen_place.nii') ;;
+  *)    echo "unknown input set: $INPUTSET (use psc or beta)" >&2; exit 1 ;;
+esac
 
 COND=${CONDITION[${SLURM_ARRAY_TASK_ID}]}
 scp $COND "rh_$COND"

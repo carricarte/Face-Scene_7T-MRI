@@ -318,8 +318,8 @@ if [ "$FALSEDIR" == "0" ]; then
 
   fi
 
-  # Convert time series to dataframe
-  if [ "$STEP" == "30" ]; then
+  # Convert time series to dataframe (was a second "30", which also ran the VASO ROI analysis)
+  if [ "$STEP" == "54" ]; then
 
     MASKFILE="$(echo "$ALLDIR" | cut -d';' -f5)"
     TMAP="$(echo "$ALLDIR" | cut -d';' -f6)"
@@ -448,7 +448,7 @@ if [ "$FALSEDIR" == "0" ]; then
 
   if [ "$STEP" == "44" ]; then
 
-    for ITERATION in echo {1..100}; do
+    for ITERATION in $(seq 1 100); do
       sbatch "$SCRIPTDIR"/prevalence "$INPUTDIR" "$OUTPUTDIR" "$WORKINGDIR" "$SCRIPTDIR" "$ITERATION"
     done
   fi
