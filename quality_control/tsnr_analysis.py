@@ -1,5 +1,4 @@
-from os.path import join, split, splitext
-import nibabel as nb
+from os.path import join
 import numpy as np
 import pandas as pd
 import sys
@@ -28,4 +27,4 @@ for m in mask:
 dist = pd.DataFrame(columns=["left_FFA", "right_FFA", "left_PPA", "right_PPA"])
 dist.loc[len(dist)] = mean_tsnr
 dist.to_csv(join(output_dir, 'tsnr.tsv'), sep='\t', index=True)
-print("Hello World")
+

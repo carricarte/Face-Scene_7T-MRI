@@ -13,17 +13,15 @@ input_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behda
 output_dir = "/Users/carricarte/scratch/projects/imagery/main/bold/pilot_07/behdata/sub-05"
 
 
+TRIAL_TYPES = {1: 'Faces', 2: 'Places', 3: 'Objects', 4: 'Scrambled', 5: 'Baseline'}
+
+
 def data2glm(input_file, output_file):
-    trial_type = ''
     data_struct = scipy.io.loadmat(input_file)
     data = data_struct['dat']
     condition_order = np.concatenate(data['order_blocks'][0])
 
-    trial_type = np.where(condition_order != 1, trial_type, 'Faces')
-    trial_type = np.where(condition_order != 2, trial_type, 'Places')
-    trial_type = np.where(condition_order != 3, trial_type, 'Objects')
-    trial_type = np.where(condition_order != 4, trial_type, 'Scrambled')
-    trial_type = np.where(condition_order != 5, trial_type, 'Baseline')
+    trial_type = np.vectorize(lambda c: TRIAL_TYPES.get(c, ''), otypes=[str])(condition_order)
 
     condition_onset = data['blockOnset'][0][0]
     condition_dur = data['blockDur'][0][0]

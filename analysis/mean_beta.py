@@ -20,12 +20,6 @@ def beta_x_cond(inputdir, conditions):
                 if ("._" not in x and "_deveinDeconv" in x and "beta_" in x) and (sub_string_1 in x or sub_string_2 in x)\
                         and "rh" not in x and "lh" not in x:
                     all_betas[j].append(join(run, x))
-                if j == 4:
-                    if ("._" not in x and "_deveinDeconv" in x and "beta_" in x) and (
-                            sub_string_1 in x or sub_string_2 in x) \
-                            and "rh" not in x and "lh" not in x:
-                        all_betas[j].append(join(run, x))
-
 
     return all_betas
 
@@ -34,9 +28,8 @@ input_dir = sys.argv[1]
 
 conditions = ['img_face', 'img_place', 'seen_face', 'seen_place']
 # conditions = ['img_place', 'seen_place']
-[cond1, cond2, cond3, cond4] = beta_x_cond(input_dir, conditions)
 # all_means = []
-for c, b in enumerate([cond1, cond2, cond3, cond4]):
+for c, b in enumerate(beta_x_cond(input_dir, conditions)):
     for file in b:
         print(file)
     print("-----------------------------------------------------------------------------------------------")

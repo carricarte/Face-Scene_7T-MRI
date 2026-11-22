@@ -24,4 +24,4 @@ for i, e in enumerate(vaso_motion_files):
     plt.plot(df_vaso.iloc[:, :3], color="blue", linewidth=0.2)
     plt.plot(df_bold.iloc[:, :3], color="red", linewidth=0.2)
     plt.show()
-print("hello world")
+

@@ -4,19 +4,8 @@ from nilearn.masking import apply_mask
 import pandas as pd
 import image_stats
 from nilearn.image import new_img_like
-from os.path import join, split
+from os.path import join
 from os import listdir
-from math import isnan
-
-
-def get_column_mask(column_niimg, column_ind):
-    # column_niimg = load_img(column_file).get_fdata()
-    column_mask = np.zeros(shape=np.shape(column_niimg))
-    for ind in column_ind:
-        if ind != 0 and not isnan(ind):
-            column_mask = np.logical_or(column_mask == 1, column_niimg == ind)
-    print(sum(sum(sum(column_mask))))
-    return column_mask
 
 
 input_dir = sys.argv[1]
@@ -33,15 +22,11 @@ hemisphere_mask_dir = sys.argv[6]
 # tmap_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/analysis/localizer"
 # hemisphere_mask_dir = "/Users/carricarte/PhD/Debugging/bold/sub-18/mask"
 
-column_dir, lf = split(layer_mask_file)
 mask_layer_list = image_stats.get_layer(layer_mask_file)
 
 # column_niimg_right = load_img(join(column_dir, "lh_ribbon_columns20000.nii")).get_fdata()
 # column_niimg_left = load_img(join(column_dir, "rh_ribbon_columns20000.nii")).get_fdata()
 
-df = pd.DataFrame()
-r = 1
-cols = ["accuracy"]
 area = ["FFA", "PPA"]
 # area = ["PPA", "FFA"]
 hemisphere = ["whole", "right", "left"]
@@ -66,47 +51,36 @@ voxel = np.arange(50, 1100, 50)  # 1000 final
 # voxel = np.arange(50, 1050, 50)  # 1000 final
 
 
+TMAP_FILES = {"FFA": "spmT_0006.nii", "PPA": "spmT_0010.nii"}
+tmaps = {a: image_stats.load_nifti(join(tmap_dir, TMAP_FILES[a])) for a in area}
+
+# ROI ∧ hemisphere ∧ layer masks do not depend on the voxel count, area or hemisphere
+# being profiled, so build them once instead of reloading the masks in every iteration.
+roi_mask = image_stats.load_nifti(mask_file) != 0
+hemi_masks = {side: np.logical_and(roi_mask, image_stats.load_nifti(f) != 0)
+              for side, f in (("right", right_mask_file), ("left", left_mask_file))}
+pre_masks = [{side: np.logical_and(m, layer_mask) for side, m in hemi_masks.items()}
+             for layer_mask in mask_layer_list]
+
+
+def top_v_mask(tmap, pre_mask, v):
+    """Voxels in `pre_mask` whose t-value is at least the (v+1)-th largest."""
+    t_thr = np.sort(image_stats.img_mask(tmap, pre_mask))[-v - 1]
+    return image_stats.threshold_mask(tmap, t_thr, pre_mask)
+
+
 for v in voxel:
     for a in area:
-        if a == "PPA":
-            tmap = "spmT_0010.nii"
-        elif a == "FFA":
-            tmap = "spmT_0006.nii"
+        tmap = tmaps[a]
 
         for h in hemisphere:
 
             pf = pd.DataFrame(columns=conditions)
-            vx = pd.DataFrame(columns=layers)
 
-            tmap_file = join(tmap_dir, tmap)
+            for k, pre_mask in enumerate(pre_masks):
 
-            for k, layer_mask in enumerate(mask_layer_list):
-
-                pre_mask_right = np.logical_and(
-                    np.logical_and(image_stats.load_nifti(mask_file) != 0, image_stats.load_nifti(right_mask_file) != 0)
-                    , layer_mask)
-
-                pre_mask_left = np.logical_and(
-                    np.logical_and(image_stats.load_nifti(mask_file) != 0, image_stats.load_nifti(left_mask_file) != 0)
-                    , layer_mask)
-
-                tval_right = image_stats.img_mask(tmap_file, pre_mask_right)
-                tval_right.sort()
-                tval_right = tval_right[::-1]
-                t_right = tval_right[v]
-                mask_right = image_stats.threshold_mask(tmap_file, t_right, pre_mask_right)
-                # column_index_right = column_niimg_right[mask_right]
-                # print(column_index_right)
-                # mask_right = get_column_mask(column_niimg_right, column_index_right)
-
-                tval_left = image_stats.img_mask(tmap_file, pre_mask_left)
-                tval_left.sort()
-                tval_left = tval_left[::-1]
-                t_left = tval_left[v]
-                mask_left = image_stats.threshold_mask(tmap_file, t_left, pre_mask_left)
-                # column_index_left = column_niimg_left[mask_left]
-                # print(column_index_left)
-                # mask_left = get_column_mask(column_niimg_left, column_index_left)
+                mask_right = top_v_mask(tmap, pre_mask["right"], v)
+                mask_left = top_v_mask(tmap, pre_mask["left"], v)
 
                 if h == "whole":
                     mask = np.logical_or(mask_left, mask_right)
@@ -115,11 +89,9 @@ for v in voxel:
                 elif h == "left":
                     mask = mask_left
 
-                vx.loc[k] = sum(sum(sum(mask)))
                 mask = new_img_like(avg_betas[0], mask)
                 # if k == 0 and v == 1500 and h == "whole":
                 #     mask.to_filename(join(hemisphere_mask_dir, "mask1502_{}_{}.nii".format(h, a)))
-                acc = []
                 lp = []
 
                 for avg_b in avg_betas:
@@ -132,6 +104,5 @@ for v in voxel:
 
             pf["layer"] = ["deep", "middle", "superficial"]
             # pf["layer"] = ["l1", "l2" "l3" "l4" "l5", "l6"]
-            # vx.to_csv(join(output_dir, 'voxels_{}_{}.tsv').format(h, a), sep='\t', index=True)
             pf.to_csv(join(output_dir, '@lamprofile_{}_{}_{}_no-devein.tsv').format(h, a, v), sep='\t',
                       index=True)
