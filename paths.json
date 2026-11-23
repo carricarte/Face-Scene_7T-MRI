@@ -40,43 +40,43 @@
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat/freesurfer/mri'.format(subject)",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer'"
     ],
     "8":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/mask_whole_FFA.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/mask.nii'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer'"
     ],
     "9":[
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/expert.opts'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer/expert.opts'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer'"
     ],
     "10":[
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/expert.opts'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer/expert.opts'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer'"
     ],
     "11":[
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/expert.opts'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer/expert.opts'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/freesurfer'"
     ],
     "12":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/ribbon_corr.nii.gz'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/layering'"
     ],
     "13":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{}/anat/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{}/anat/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{}/mask/'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/anatomical_data/layering'"
     ],
     "14":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/cr_rsub-{0}_task-loc_run-01_bold.nii'.format(subject)",
@@ -88,7 +88,7 @@
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/rawdata/sub-{0}/func'.format(subject)",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/func'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/distortion_correction'"
     ],
     "17":[
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/func'.format(subject)",
@@ -109,25 +109,25 @@
         "'/scratch/carricarte/projects/imagery/pilot_07/derivatives/sub-{0}/func/masked_meansub-{0}_task-imagery_run-00_bold.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/pilot_07/derivatives/sub-{0}/func'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/bias_correction'"
     ],
     "20":[
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/func/cr_rsub-{0}_task-loc_run-01_bold.nii'.format(subject)",
         "'EXCLUDE'",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/bias_correction'"
     ],
     "21":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/registered_Warp.nii'.format(subject)",
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/freesurfer/mri/brainmask.nii'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/brain_mask'"
     ],
     "23":[
         "'/scratch/raxidea/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/identity'.format(subject)",
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/rim_layers_equivol.nii.gz'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/deveining'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/AFL_cr_rsub-{0}_task-loc_run-01_bold.nii'.format(subject)"
     ],
@@ -135,7 +135,7 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/registration'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/freesurfer/mri/brainmask.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/masked_meansub-{0}_task-loc_run-01_bold.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/mask.nii'.format(subject)",
@@ -145,7 +145,7 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/freesurfer/mri/orig.nii'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'",
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/registration'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/reg2/registered_0GenericAffine.mat'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func/reg2/registered_1Warp.nii.gz'.format(subject)"
     ],
@@ -153,13 +153,13 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives'",
         "'EXCLUDE'",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/smoothing'"
     ],
     "27":[
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/'.format(subject)",
         "'EXCLUDE'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/zscore'"
     ],
     "28":[
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat/orig.nii'.format(subject)",
@@ -177,7 +177,7 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/func'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/behdata/sub-{0}/'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/analysis'",
+        "'/home/carricarte/layer_mri/pipeline/analysis/glm'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/mask.nii'.format(subject)"
     ],
     "31":[
@@ -253,13 +253,13 @@
         "'/scratch/raxidea/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/identity'.format(subject)",
         "'EXCLUDE'",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/analysis'"
+        "'/home/carricarte/layer_mri/pipeline/analysis/roi'"
     ],
     "40":[
         "'/scratch/raxidea/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/identity/'.format(subject)",
         "'/scratch/raxidea/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/output'.format(subject)",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/analysis'",
+        "'/home/carricarte/layer_mri/pipeline/analysis/laminar'",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/mask/mask.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/anat/rim_layers_equivol.nii'.format(subject)",
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{0}/analysis/localizer'.format(subject)",
@@ -307,13 +307,13 @@
         "'/scratch/carricarte/projects/imagery/main/bold/pilot_07/derivatives/sub-{}/func/'.format(subject)",
         "'EXCLUDE'",
         "'EXCLUDE'",
-        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data'"
+        "'/home/carricarte/layer_mri/pipeline/preprocessing/functional_data/utils'"
     ],
     "48":[
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/func/'.format(subject)",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/analysis/univariate/no_scaled'.format(subject)",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/behdata/sub-{0}/'.format(subject)",
-        "'/home/carricarte/layer_mri/pipeline/analysis'",
+        "'/home/carricarte/layer_mri/pipeline/analysis/roi'",
         "'/scratch/carricarte/projects/imagery/pilot/bold/pilot_07/derivatives/sub-{0}/anat/rim_layers_equivol.nii'.format(subject)"
     ],
     "49":[

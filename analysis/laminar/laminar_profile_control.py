@@ -1,7 +1,9 @@
+import os
 import sys
 import numpy as np
 from nilearn.masking import apply_mask
 import pandas as pd
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'utils'))
 import image_stats
 from nilearn.image import new_img_like
 from os.path import join

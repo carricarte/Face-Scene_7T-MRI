@@ -1,6 +1,8 @@
 import numpy as np
 from os.path import join, split
+import os
 import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'utils'))
 import image_stats
 from nilearn.image import new_img_like
 
