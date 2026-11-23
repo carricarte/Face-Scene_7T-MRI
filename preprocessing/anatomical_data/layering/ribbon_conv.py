@@ -1,8 +1,9 @@
 import nibabel as nib
 import numpy as np
 from os.path import join
+import os
 import sys
-sys.path.append('/home/carricarte/layer_mri/pipeline/analysis/')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'utils'))
 import image_stats as st
 
 input_dir = sys.argv[1]

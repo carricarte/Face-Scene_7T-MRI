@@ -1,6 +1,7 @@
+import os
 import sys
 from os.path import join, split
-sys.path.append('/home/carricarte/layer_mri/pipeline/analysis')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'utils'))
 import image_stats
 import numpy as np
 from nilearn.image import load_img, new_img_like

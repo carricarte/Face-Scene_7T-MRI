@@ -1,8 +1,9 @@
 from os.path import join
 import numpy as np
 import pandas as pd
+import os
 import sys
-sys.path.append('/home/carricarte/layer_mri/pipeline/analysis/')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'utils'))
 import image_stats
 
 input_dir = sys.argv[1]

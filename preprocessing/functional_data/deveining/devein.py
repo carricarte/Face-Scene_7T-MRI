@@ -1,10 +1,11 @@
 from nilearn.image import new_img_like
 from os.path import split, join
 from os import listdir
+import os
 import sys
 import numpy as np
 
-sys.path.append('/home/carricarte/layer_mri/pipeline/analysis/')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'utils'))
 import image_stats as st
 
 nifti_dir = sys.argv[1]
